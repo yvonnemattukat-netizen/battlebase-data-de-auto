@@ -299,52 +299,14 @@ JSON à traduire:
     
     return None
 
-def push_to_github():
-    """Crée une nouvelle branche et pousse le fichier traduit"""
-    date_str = datetime.now().strftime('%Y_%m_%d')
-    branch_name = f"new_translation_{date_str}"
-    
-    print(f"\n{'='*60}")
-    print(f"Push vers GitHub sur la branche: {branch_name}")
-    print(f"{'='*60}")
-    
-    try:
-        # Créer et checkout la nouvelle branche
-        print("Création de la nouvelle branche...")
-        subprocess.run(['git', 'checkout', '-b', branch_name], check=True)
-        
-        # Ajouter le fichier traduit
-        print("Ajout du fichier traduit...")
-        subprocess.run(['git', 'add', 'battlebase-data.json'], check=True)
-        
-        # Créer le commit
-        print("Création du commit...")
-        commit_message = f"Traduction automatique du {date_str}"
-        subprocess.run(['git', 'commit', '-m', commit_message], check=True)
-        
-        # Pousser la branche
-        print("Push de la branche vers GitHub...")
-        subprocess.run(['git', 'push', '-u', 'origin', branch_name], check=True)
-        
-        print(f"\n✅ Branche '{branch_name}' créée et poussée avec succès!")
-        print(f"   Vous pouvez créer une pull request à l'adresse:")
-        print(f"   https://github.com/supadfr/battlebase-data-fr-auto/compare/{branch_name}")
-        
-        # Retour sur main
-        subprocess.run(['git', 'checkout', 'main'], check=True)
-        
-        return True
-        
-    except subprocess.CalledProcessError as e:
-        print(f"\n❌ Erreur lors du push: {e}")
-        # Essayer de revenir sur main en cas d'erreur
-        try:
-            subprocess.run(['git', 'checkout', 'main'], check=True)
-        except:
-            pass
-        return False
+# Fonction push_to_github retirée car elle nécessite une authentification
+# Les instructions de push sont maintenant affichées à la fin du script
 
 def main():
+    # Créer le répertoire reports s'il n'existe pas
+    import os
+    os.makedirs('reports', exist_ok=True)
+    
     # Télécharger le fichier
     if not download_latest_file():
         return
@@ -639,27 +601,84 @@ Retourne UNIQUEMENT le JSON traduit, sans texte avant ou après."""
             truly_missing_entries.append(item)
     
     print(f"  Entrées dans le fichier original: {len(data)}")
+    print(f"  Entrées distinctes traduites: {len(translated_data)}")
     print(f"  Entrées dans le fichier de sortie: {len(output_data)}")
-    print(f"  Entrées réellement manquantes: {len(truly_missing_entries)}")
     
-    # Si des doublons ont été détectés
-    if len(output_data) > len(translated_data):
-        print(f"  ⚠️  Doublons détectés: {len(output_data) - len(translated_data)} entrées en double")
+    # Analyser la différence et identifier les doublons
+    if len(output_data) < len(data):
+        # Identifier les doublons - entrées qui existent dans l'original mais pas dans la sortie et ne sont pas manquantes
+        all_original_ids_normalized = {item['id'].replace("-", "_").replace("'", "_"): item['id'] for item in data}
+        duplicate_entries = []
+        
+        for item in data:
+            normalized_id = item['id'].replace("-", "_").replace("'", "_")
+            # Si l'ID n'est ni dans les manquants ni dans la sortie (normalisée), c'est un doublon
+            if normalized_id not in missing_ids_normalized and normalized_id in output_ids_normalized:
+                # Vérifier si c'est vraiment un doublon en comparant avec l'original
+                original_id = item['id']
+                if original_id not in output_ids_raw:
+                    duplicate_entries.append(item)
+        
+        duplicates_count = len(duplicate_entries)
+        if duplicates_count > 0:
+            print(f"  ℹ️  Explication: {duplicates_count} entrées apparaissent comme doublons (même contenu avec IDs légèrement différents)")
+            print(f"     → {len(data)} (original) - {len(output_data)} (sortie) - {len(truly_missing_entries)} (manquantes) = {duplicates_count} doublons")
+            
+            # Afficher la liste des doublons
+            print(f"\n  📋 Liste des {duplicates_count} doublons ignorés:")
+            for i, entry in enumerate(duplicate_entries, 1):
+                print(f"     {i}. {entry['id']}")
+                # Trouver l'ID correspondant dans le fichier de sortie
+                normalized = entry['id'].replace("-", "_").replace("'", "_")
+                for output_item in output_data:
+                    if output_item['id'].replace("-", "_").replace("'", "_") == normalized:
+                        if output_item['id'] != entry['id']:
+                            print(f"        → Présent sous l'ID: {output_item['id']}")
+                        break
+            
+            # Sauvegarder les doublons dans un fichier
+            with open('reports/duplicate_entries.json', 'w', encoding='utf-8') as f:
+                json.dump(duplicate_entries, f, indent=2, ensure_ascii=False)
+            print(f"\n  💾 Liste complète sauvegardée dans reports/duplicate_entries.json")
+    
+    print(f"\n  Entrées réellement manquantes: {len(truly_missing_entries)}")
+    
+    # Créer un rapport de synthèse
+    report_data = {
+        "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "total_entries": len(data),
+        "translated_entries": len(output_data),
+        "missing_entries": len(truly_missing_entries),
+        "duplicate_entries": len(duplicate_entries) if 'duplicate_entries' in locals() else 0,
+        "translation_complete": len(truly_missing_entries) == 0
+    }
+    
+    with open('reports/translation_report.json', 'w', encoding='utf-8') as f:
+        json.dump(report_data, f, indent=2, ensure_ascii=False)
     
     # Résultat final
     if len(truly_missing_entries) == 0:
         print("\n✅ Toutes les entrées ont été traduites avec succès!")
-        push_to_github()
+        print("\n📋 Pour créer une pull request :")
+        print(f"   1. git checkout -b new_translation_{datetime.now().strftime('%Y_%m_%d')}")
+        print("   2. git add battlebase-data.json")
+        print(f"   3. git commit -m \"Traduction automatique du {datetime.now().strftime('%Y_%m_%d')}\"")
+        print("   4. git push -u origin <nom_de_la_branche>")
+        print("   5. Créer la PR sur GitHub")
+        print("\n📁 Rapports générés dans ./reports/")
+        print("   - translation_report.json : Rapport de synthèse")
+        if report_data["duplicate_entries"] > 0:
+            print("   - duplicate_entries.json : Liste des doublons")
     else:
         print(f"\n⚠️  {len(truly_missing_entries)} entrées n'ont pas pu être traduites après {retry_round} rounds de rattrapage")
-        print("⚠️  Push annulé: la traduction n'est pas complète")
+        print("⚠️  La traduction n'est pas complète")
         
         # Sauvegarder les IDs des entrées réellement non traduites
         untranslated_ids = [item['id'] for item in truly_missing_entries]
-        with open('untranslated_ids.txt', 'w', encoding='utf-8') as f:
+        with open('reports/untranslated_ids.txt', 'w', encoding='utf-8') as f:
             if untranslated_ids:
                 f.write('\n'.join(untranslated_ids))
-                print(f"   {len(untranslated_ids)} IDs non traduits ont été sauvegardés dans untranslated_ids.txt")
+                print(f"   {len(untranslated_ids)} IDs non traduits ont été sauvegardés dans reports/untranslated_ids.txt")
                 # Afficher les premiers IDs manquants
                 print("\n   Exemples d'IDs manquants:")
                 for id in untranslated_ids[:5]:
@@ -669,6 +688,19 @@ Retourne UNIQUEMENT le JSON traduit, sans texte avant ou après."""
             else:
                 f.write("Aucun ID non traduit trouvé")
                 print("   ✅ Aucun ID réellement manquant")
+        
+        # Sauvegarder aussi les entrées complètes non traduites
+        if truly_missing_entries:
+            with open('reports/missing_entries.json', 'w', encoding='utf-8') as f:
+                json.dump(truly_missing_entries, f, indent=2, ensure_ascii=False)
+            print(f"   💾 Entrées complètes sauvegardées dans reports/missing_entries.json")
+        
+        print("\n📁 Rapports générés dans ./reports/")
+        print("   - translation_report.json : Rapport de synthèse")
+        print("   - untranslated_ids.txt : Liste des IDs non traduits")
+        print("   - missing_entries.json : Entrées complètes non traduites")
+        if report_data["duplicate_entries"] > 0:
+            print("   - duplicate_entries.json : Liste des doublons")
 
 if __name__ == "__main__":
     main()

@@ -435,6 +435,8 @@ def main():
         print(f"\n{'='*60}")
         print(f"Round de rattrapage {retry_round}/{max_retry_rounds}")
         print(f"  ⚠️  {missing} entrées manquantes")
+        print(f"  IDs traduits: {len(translated_ids)}")
+        print(f"  Entrées dans translated_data: {len(translated_data)}")
         
         # Identifier précisément les entrées manquantes
         missing_entries = [item for item in data if item['id'] not in translated_ids]
@@ -605,25 +607,55 @@ Retourne UNIQUEMENT le JSON traduit, sans texte avant ou après."""
     print(f"  Entrées dans le fichier de sortie: {len(output_data)}")
     
     # Analyser la différence et identifier les doublons
+    duplicate_entries = []
     if len(output_data) < len(data):
-        # Identifier les doublons - entrées qui existent dans l'original mais pas dans la sortie et ne sont pas manquantes
-        all_original_ids_normalized = {item['id'].replace("-", "_").replace("'", "_"): item['id'] for item in data}
-        duplicate_entries = []
+        # Créer des ensembles pour analyse
+        original_ids = {item['id'] for item in data}
         
+        # Identifier toutes les entrées non présentes directement
+        not_in_output = []
         for item in data:
+            if item['id'] not in output_ids_raw:
+                not_in_output.append(item)
+        
+        print(f"  Entrées non présentes directement: {len(not_in_output)}")
+        
+        # Parmi celles-ci, identifier les doublons (présentes avec un ID différent)
+        for item in not_in_output:
             normalized_id = item['id'].replace("-", "_").replace("'", "_")
-            # Si l'ID n'est ni dans les manquants ni dans la sortie (normalisée), c'est un doublon
-            if normalized_id not in missing_ids_normalized and normalized_id in output_ids_normalized:
-                # Vérifier si c'est vraiment un doublon en comparant avec l'original
-                original_id = item['id']
-                if original_id not in output_ids_raw:
-                    duplicate_entries.append(item)
+            # Si présent sous forme normalisée mais pas manquant, c'est un doublon
+            if normalized_id in output_ids_normalized and normalized_id not in missing_ids_normalized:
+                duplicate_entries.append(item)
         
         duplicates_count = len(duplicate_entries)
+        unexplained_diff = len(not_in_output) - duplicates_count - len(truly_missing_entries)
+        
         if duplicates_count > 0:
             print(f"  ℹ️  Explication: {duplicates_count} entrées apparaissent comme doublons (même contenu avec IDs légèrement différents)")
             print(f"     → {len(data)} (original) - {len(output_data)} (sortie) - {len(truly_missing_entries)} (manquantes) = {duplicates_count} doublons")
+        
+        if unexplained_diff > 0:
+            print(f"  ⚠️  {unexplained_diff} entrées non expliquées (ni doublons, ni manquantes)")
             
+            # Identifier les entrées non expliquées
+            unexplained_entries = []
+            for item in not_in_output:
+                if item not in duplicate_entries and item not in truly_missing_entries:
+                    unexplained_entries.append(item)
+            
+            if unexplained_entries:
+                print(f"\n  🔍 Analyse des entrées non expliquées:")
+                for i, entry in enumerate(unexplained_entries[:5], 1):
+                    print(f"     {i}. {entry['id']}")
+                if len(unexplained_entries) > 5:
+                    print(f"     ... et {len(unexplained_entries) - 5} autres")
+                
+                # Sauvegarder pour analyse
+                with open('reports/unexplained_entries.json', 'w', encoding='utf-8') as f:
+                    json.dump(unexplained_entries, f, indent=2, ensure_ascii=False)
+                print(f"  💾 Liste complète sauvegardée dans reports/unexplained_entries.json")
+        
+        if duplicates_count > 0:
             # Afficher la liste des doublons
             print(f"\n  📋 Liste des {duplicates_count} doublons ignorés:")
             for i, entry in enumerate(duplicate_entries, 1):

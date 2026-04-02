@@ -167,26 +167,26 @@ def translate_chunk_with_claude(chunk, chunk_number, max_retries=3):
     has_apostrophes = False
     
     # Créer le prompt
-    prompt = """Tu dois traduire le JSON ci-dessous en français et retourner UNIQUEMENT le JSON traduit.
+    prompt = """Du musst das folgende JSON ins Deutsche übersetzen und NUR das übersetzte JSON zurückgeben.
 
-RÈGLES CRITIQUES:
-1. Ta réponse doit commencer DIRECTEMENT par [ sans aucun texte avant
-2. Ta réponse doit se terminer par ] sans aucun texte après
-3. Ne jamais ajouter d'explication, de commentaire ou de texte en dehors du JSON
-4. Garder EXACTEMENT la même structure JSON
-5. Ne JAMAIS modifier les clés 'id' - elles doivent rester identiques
-6. Traduire les valeurs des clés 'body', 'name', 'description', 'lore', 'whenRules', 'targetRules', 'effectRules', 'restrictionRules' et autres textes
-7. Contexte: règles de Warhammer 40000 - utiliser le vocabulaire technique approprié
-8. IMPORTANT: Les underscores (_) dans les IDs remplacent des apostrophes et doivent être conservés EXACTEMENT
-9. Pour les valeurs null, garder null (pas "null" en string)
+KRITISCHE REGELN:
+1. Deine Antwort muss DIREKT mit [ beginnen, ohne Text davor
+2. Deine Antwort muss mit ] enden, ohne Text danach
+3. Niemals Erklärungen, Kommentare oder Text außerhalb des JSON hinzufügen
+4. Die JSON-Struktur EXAKT beibehalten
+5. Die 'id'-Schlüssel NIEMALS ändern – sie müssen identisch bleiben
+6. Die Werte der Schlüssel 'body', 'name', 'description', 'lore', 'whenRules', 'targetRules', 'effectRules', 'restrictionRules' und andere Texte übersetzen
+7. Kontext: Warhammer 40000-Regeln – angemessenes Fachvokabular verwenden
+8. WICHTIG: Unterstriche (_) in den IDs ersetzen Apostrophe und müssen EXAKT beibehalten werden
+9. Bei null-Werten null behalten (nicht "null" als String)
 
-EXEMPLE de réponse CORRECTE:
-[{"id":"abc123","body":"Texte traduit en français","name":"Nom traduit"}]
+BEISPIEL einer KORREKTEN Antwort:
+[{"id":"abc123","body":"Ins Deutsche übersetzter Text","name":"Übersetzter Name"}]
 
-EXEMPLE de réponse INCORRECTE:
-Voici la traduction: [{"id":"abc123"...}]
+BEISPIEL einer FALSCHEN Antwort:
+Hier ist die Übersetzung: [{"id":"abc123"...}]
 
-JSON à traduire:
+Zu übersetzender JSON:
 """
     
     chunk_json = json.dumps(processed_chunk, indent=2, ensure_ascii=False)
@@ -482,16 +482,16 @@ def main():
                         print(f"  ✗ Échec de la traduction")
                         # Essayer une approche manuelle en dernier recours
                         print(f"  Tentative de traduction manuelle...")
-                        manual_prompt = f"""Traduis ce stratagème Warhammer 40000 en français. Retourne UNIQUEMENT un objet JSON valide.
+                        manual_prompt = f"""Übersetze dieses Warhammer 40000-Stratagem ins Deutsche. Gib NUR ein gültiges JSON-Objekt zurück.
 
 {json.dumps(entry, indent=2, ensure_ascii=False)}
 
-RÈGLES:
-- Garde l'ID exactement comme il est (avec l'apostrophe)
-- Traduis "lore", "whenRules", "targetRules", "effectRules", "restrictionRules"
-- Pour null, garde null
+REGELN:
+- Behalte die ID exakt wie sie ist (mit dem Apostroph)
+- Übersetze "lore", "whenRules", "targetRules", "effectRules", "restrictionRules"
+- Bei null, behalte null
 
-Retourne UNIQUEMENT le JSON traduit, sans texte avant ou après."""
+Gib NUR das übersetzte JSON zurück, ohne Text davor oder danach."""
                         
                         try:
                             result = subprocess.run(

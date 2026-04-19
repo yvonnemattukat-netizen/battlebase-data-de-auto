@@ -9,6 +9,10 @@ from datetime import datetime
 import os
 import openai
 
+REPORTS_DIR = 'reports'
+CHUNKS_DIR = os.path.join(REPORTS_DIR, 'chunks')
+FAILED_CHUNKS_DIR = os.path.join(REPORTS_DIR, 'failed_chunks')
+
 # OpenAI API-Schlüssel aus der Systemumgebungsvariable ladenecho $Env:OPENAI_API_KEY
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
@@ -171,7 +175,103 @@ def check_executable_exists(executable):
         print(f"Error: Executable '{executable}' not found in PATH.")
         sys.exit(1)
 
-def translate_chunk_with_openai(chunk, chunk_number):
+def get_chunk_file_path(chunk_number):
+    return os.path.join(CHUNKS_DIR, f"chunk_{chunk_number:04d}.json")
+
+def save_chunk_result(chunk_number, translated_chunk):
+    os.makedirs(CHUNKS_DIR, exist_ok=True)
+    chunk_path = get_chunk_file_path(chunk_number)
+    with open(chunk_path, 'w', encoding='utf-8') as f:
+        json.dump(translated_chunk, f, indent=2, ensure_ascii=False)
+
+def validate_chunk_translation(source_chunk, translated_chunk):
+    if not isinstance(translated_chunk, list):
+        return False, f"Ergebnis ist kein JSON-Array, sondern: {type(translated_chunk).__name__}"
+
+    if len(translated_chunk) != len(source_chunk):
+        return False, f"Länge des übersetzten Chunks stimmt nicht: {len(translated_chunk)} != {len(source_chunk)}"
+
+    for index, (source_item, translated_item) in enumerate(zip(source_chunk, translated_chunk)):
+        is_valid, error = validate_translated_item_structure(source_item, translated_item, path=f"$[{index}]")
+        if not is_valid:
+            return False, error
+
+    return True, None
+
+def load_existing_chunk_if_valid(source_chunk, chunk_number):
+    chunk_path = get_chunk_file_path(chunk_number)
+    if not os.path.exists(chunk_path):
+        return None
+
+    try:
+        with open(chunk_path, 'r', encoding='utf-8') as f:
+            existing_chunk = json.load(f)
+    except (OSError, json.JSONDecodeError) as e:
+        print(f"  ⚠️  Konnte vorhandenen Chunk nicht laden ({chunk_path}): {e}")
+        return None
+
+    is_valid, error = validate_chunk_translation(source_chunk, existing_chunk)
+    if not is_valid:
+        print(f"  ⚠️  Vorhandener Chunk ungültig ({chunk_path}): {error}")
+        return None
+
+    print(f"  ♻️  Verwende vorhandenen Chunk: {chunk_path}")
+    return existing_chunk
+
+def log_failed_chunk(chunk_number, source_chunk, raw_response=None, extracted_json=None, error=None):
+    os.makedirs(FAILED_CHUNKS_DIR, exist_ok=True)
+    failed_path = os.path.join(FAILED_CHUNKS_DIR, f"chunk_{chunk_number:04d}.json")
+    payload = {
+        "timestamp": datetime.now().isoformat(),
+        "chunk_number": chunk_number,
+        "chunk_size": len(source_chunk),
+        "error": error,
+        "source_chunk": source_chunk,
+        "raw_response": raw_response,
+        "extracted_json": extracted_json
+    }
+    with open(failed_path, 'w', encoding='utf-8') as f:
+        json.dump(payload, f, indent=2, ensure_ascii=False)
+    print(f"  ℹ️  Fehlerdetails gespeichert: {failed_path}")
+
+def merge_chunk_files(output_file, max_chunk_number=None):
+    if not os.path.exists(CHUNKS_DIR):
+        return None
+
+    chunk_files_with_numbers = []
+    for filename in os.listdir(CHUNKS_DIR):
+        if not (filename.startswith('chunk_') and filename.endswith('.json')):
+            continue
+        try:
+            chunk_no = int(filename.replace('chunk_', '').replace('.json', ''))
+        except ValueError:
+            continue
+        if max_chunk_number is not None and chunk_no > max_chunk_number:
+            continue
+        chunk_files_with_numbers.append((chunk_no, filename))
+
+    chunk_files_with_numbers.sort(key=lambda item: item[0])
+    chunk_files = [filename for _, filename in chunk_files_with_numbers]
+
+    if not chunk_files:
+        return None
+
+    merged_data = []
+    for chunk_file in chunk_files:
+        chunk_path = os.path.join(CHUNKS_DIR, chunk_file)
+        with open(chunk_path, 'r', encoding='utf-8') as f:
+            chunk_data = json.load(f)
+        if not isinstance(chunk_data, list):
+            raise ValueError(f"{chunk_path} enthält kein JSON-Array")
+        merged_data.extend(chunk_data)
+
+    with open(output_file, 'w', encoding='utf-8') as f:
+        json.dump(merged_data, f, indent=2, ensure_ascii=False)
+
+    print(f"  ♻️  Ausgabe aus {len(chunk_files)} Chunk-Dateien zusammengeführt")
+    return merged_data
+
+def translate_chunk_with_openai(chunk, chunk_number, max_retries=3):
     """Übersetzt einen Chunk mit der OpenAI API."""
     print(f"\nÜbersetzung von Chunk {chunk_number} ({len(chunk)} Einträge)...")
 
@@ -179,22 +279,21 @@ def translate_chunk_with_openai(chunk, chunk_number):
     prompt = """Übersetze das folgende JSON vollständig ins Deutsche und gib ausschließlich das übersetzte JSON-Array zurück.
 
 KRITISCHE REGELN:
-1. Die Antwort MUSS direkt mit [ beginnen (kein Text davor).
-2. Die Antwort MUSS mit ] enden (kein Text danach).
-3. Niemals Erklärungen, Kommentare oder sonstigen Zusatztext ausgeben.
-4. Die JSON-Struktur exakt beibehalten (Objekte, Arrays, Reihenfolge, Schlüssel).
-5. Jeder String-Wert muss rekursiv ins Deutsche übersetzt werden – in allen Feldern und Ebenen.
-6. Ausnahme: Der Wert von Schlüsseln mit Namen "id" darf niemals verändert werden.
-7. Schlüssel-Namen, Zahlen, Booleans und null müssen unverändert bleiben.
-8. Datentypen dürfen nicht geändert werden.
-9. Stil-Priorität: Natürliches, korrektes und gut verständliches Deutsch ist wichtiger als eine wörtliche 40K-Übersetzung.
-10. Formuliere aktiv, klar und möglichst in kurzen Sätzen. Vermeide holprige oder unnötig verschachtelte Formulierungen.
-11. Vermeide unklare Pronomen wie "sie/ihr/deren", wenn die Referenz unklar sein kann. Nutze stattdessen eindeutige Formulierungen wie "der Spieler" oder "der Spieler, dessen Zug es ist".
-12. Terminologie konsistent halten: gleiche Begriffe innerhalb eines Textes immer gleich übersetzen.
-13. Verwende in Regeltexten "SP (Siegpunkte)" statt "VP" (z. B. "3 SP", "bis zu 15 SP pro Runde").
-14. Übersetze "CHARACTER" und "CHARAKTER" als "Charakter"; verwende für "CHARACTER models"/"CHARAKTER-Modelle" bevorzugt "Charakter-Modelle".
-15. Behalte die vorhandene String-Formatierung bestmöglich bei (Absätze, Zeilenumbrüche, Aufzählungspunkte wie •).
-16. Mini-Glossar: VP -> SP (Siegpunkte); CHARACTER models/CHARAKTER-Modelle -> Charakter-Modelle.
+1. Gib ausschließlich ein gültiges JSON-Array zurück (kein Markdown, keine ```json```-Codefences).
+2. Niemals Erklärungen, Kommentare oder sonstigen Zusatztext ausgeben.
+3. Die JSON-Struktur exakt beibehalten (Objekte, Arrays, Reihenfolge, Schlüssel).
+4. Jeder String-Wert muss rekursiv ins Deutsche übersetzt werden – in allen Feldern und Ebenen.
+5. Ausnahme: Der Wert von Schlüsseln mit Namen "id" darf niemals verändert werden.
+6. Schlüssel-Namen, Zahlen, Booleans und null müssen unverändert bleiben.
+7. Datentypen dürfen nicht geändert werden.
+8. Stil-Priorität: Natürliches, korrektes und gut verständliches Deutsch ist wichtiger als eine wörtliche 40K-Übersetzung.
+9. Formuliere aktiv, klar und möglichst in kurzen Sätzen. Vermeide holprige oder unnötig verschachtelte Formulierungen.
+10. Vermeide unklare Pronomen wie "sie/ihr/deren", wenn die Referenz unklar sein kann. Nutze stattdessen eindeutige Formulierungen wie "der Spieler" oder "der Spieler, dessen Zug es ist".
+11. Terminologie konsistent halten: gleiche Begriffe innerhalb eines Textes immer gleich übersetzen.
+12. Verwende in Regeltexten "SP (Siegpunkte)" statt "VP" (z. B. "3 SP", "bis zu 15 SP pro Runde").
+13. Übersetze "CHARACTER" und "CHARAKTER" als "Charakter"; verwende für "CHARACTER models"/"CHARAKTER-Modelle" bevorzugt "Charakter-Modelle".
+14. Behalte die vorhandene String-Formatierung bestmöglich bei (Absätze, Zeilenumbrüche, Aufzählungspunkte wie •).
+15. Mini-Glossar: VP -> SP (Siegpunkte); CHARACTER models/CHARAKTER-Modelle -> Charakter-Modelle.
 
 ZU ÜBERSETZENDES JSON:
 """
@@ -204,28 +303,48 @@ ZU ÜBERSETZENDES JSON:
 
     print(f"  Prompt erstellt, Länge: {len(full_prompt)} Zeichen")
 
-    try:
-        # OpenAI API aufrufen
-        response = openai.ChatCompletion.create(
-            model="gpt-4",
-            messages=[
-                {"role": "system", "content": "Du bist ein hilfreicher Übersetzer."},
-                {"role": "user", "content": full_prompt}
-            ]
-        )
+    for attempt in range(1, max_retries + 1):
+        try:
+            response = openai.ChatCompletion.create(
+                model="gpt-4",
+                messages=[
+                    {"role": "system", "content": "Du bist ein hilfreicher Übersetzer."},
+                    {"role": "user", "content": full_prompt}
+                ]
+            )
 
-        translated_chunk = response['choices'][0]['message']['content'].strip()
+            response_text = response['choices'][0]['message']['content'].strip()
+            parsed_chunk, extracted_json = extract_json_from_response(response_text)
 
-        if not (translated_chunk.startswith('[') and translated_chunk.endswith(']')):
-            print("  ✗ Ungültiges Antwortformat: Muss mit [ beginnen und mit ] enden.")
-            sys.exit(1)  # Exit immediately on invalid response
+            if parsed_chunk is None:
+                error = "JSON konnte aus der Modellantwort nicht extrahiert oder geparst werden."
+                print(f"  ✗ {error}")
+                log_failed_chunk(chunk_number, chunk, raw_response=response_text, error=error)
+            else:
+                is_valid, validation_error = validate_chunk_translation(chunk, parsed_chunk)
+                if is_valid:
+                    print("  ✓ Chunk erfolgreich übersetzt und validiert")
+                    return parsed_chunk
 
-        print("  ✓ Chunk erfolgreich übersetzt")
-        return json.loads(translated_chunk)
+                print(f"  ✗ Strukturprüfung fehlgeschlagen: {validation_error}")
+                log_failed_chunk(
+                    chunk_number,
+                    chunk,
+                    raw_response=response_text,
+                    extracted_json=extracted_json,
+                    error=validation_error
+                )
 
-    except openai.error.OpenAIError as e:
-        print(f"  ✗ OpenAI API-Fehler: {e}")
-        sys.exit(1)  # Exit immediately on API error
+        except openai.error.OpenAIError as e:
+            error = f"OpenAI API-Fehler: {e}"
+            print(f"  ✗ {error}")
+            log_failed_chunk(chunk_number, chunk, error=error)
+
+        if attempt < max_retries:
+            print(f"  ↻ Neuer Versuch ({attempt + 1}/{max_retries})...")
+            time.sleep(1)
+
+    return None
 
 # Funktion push_to_github entfernt, da Authentifizierung nötig wäre
 # Push-Hinweise werden am Ende des Skripts ausgegeben
@@ -245,7 +364,9 @@ def check_file_exists(file_path):
 
 def main():
     # Reports-Verzeichnis anlegen, falls es nicht existiert
-    os.makedirs('reports', exist_ok=True)
+    os.makedirs(REPORTS_DIR, exist_ok=True)
+    os.makedirs(CHUNKS_DIR, exist_ok=True)
+    os.makedirs(FAILED_CHUNKS_DIR, exist_ok=True)
 
     # Originaldatei laden
     input_file = 'battlebase-data-en.json'
@@ -308,10 +429,18 @@ def main():
         chunk = data[position:position + current_chunk_size]
 
         try:
-            # Chunk übersetzen
-            translated_chunk = translate_chunk_with_openai(chunk, chunk_number)
+            existing_chunk = load_existing_chunk_if_valid(chunk, chunk_number)
+            used_existing_chunk = existing_chunk is not None
+            if used_existing_chunk:
+                translated_chunk = existing_chunk
+            else:
+                # Chunk übersetzen
+                translated_chunk = translate_chunk_with_openai(chunk, chunk_number)
 
-            if translated_chunk:
+            if translated_chunk is not None:
+                if not used_existing_chunk:
+                    save_chunk_result(chunk_number, translated_chunk)
+
                 # Nur noch nicht vorhandene Einträge hinzufügen
                 for item in translated_chunk:
                     if item['id'] not in translated_ids:
@@ -326,8 +455,10 @@ def main():
                     print(f"  ✅ Optimale Größe {'bestätigt' if optimal_chunk_size == current_chunk_size else 'aktualisiert'}: {optimal_chunk_size} Einträge/Chunk")
 
                 # Nach jedem Chunk speichern
-                with open(output_file, 'w', encoding='utf-8') as f:
-                    json.dump(translated_data, f, indent=2, ensure_ascii=False)
+                merged_data = merge_chunk_files(output_file, max_chunk_number=chunk_number)
+                if merged_data is None:
+                    with open(output_file, 'w', encoding='utf-8') as f:
+                        json.dump(translated_data, f, indent=2, ensure_ascii=False)
 
                 print(f"  Fortschritt: {len(translated_data)}/{len(data)} Einträge übersetzt")
 
@@ -410,7 +541,8 @@ def main():
                     chunk_number += 1
                     print(f"\nEinzelübersetzung von: {entry['id']}")
                     translated_single = translate_chunk_with_openai([entry], chunk_number, max_retries=5)
-                    if translated_single:
+                    if translated_single is not None:
+                        save_chunk_result(chunk_number, translated_single)
                         added = False
                         for item in translated_single:
                             if item['id'] not in translated_ids and item['id'] == entry['id']:
@@ -419,8 +551,10 @@ def main():
                                 missing_entries.remove(entry)
                                 added = True
                         # Speichern
-                        with open(output_file, 'w', encoding='utf-8') as f:
-                            json.dump(translated_data, f, indent=2, ensure_ascii=False)
+                        merged_data = merge_chunk_files(output_file, max_chunk_number=chunk_number)
+                        if merged_data is None:
+                            with open(output_file, 'w', encoding='utf-8') as f:
+                                json.dump(translated_data, f, indent=2, ensure_ascii=False)
                         if added:
                             print("  ✓ Erfolgreich übersetzt")
                         else:
@@ -463,8 +597,11 @@ Gib NUR das übersetzte JSON zurück, ohne Text davor oder danach."""
                                             translated_data.append(translated_obj)
                                             translated_ids.add(translated_obj['id'])
                                             missing_entries.remove(entry)
-                                            with open(output_file, 'w', encoding='utf-8') as f:
-                                                json.dump(translated_data, f, indent=2, ensure_ascii=False)
+                                            save_chunk_result(chunk_number, [translated_obj])
+                                            merged_data = merge_chunk_files(output_file, max_chunk_number=chunk_number)
+                                            if merged_data is None:
+                                                with open(output_file, 'w', encoding='utf-8') as f:
+                                                    json.dump(translated_data, f, indent=2, ensure_ascii=False)
                                             print("    ✓ Manuelle Übersetzung erfolgreich!")
                                     except:
                                         print("    ✗ Manuelles JSON-Parsen fehlgeschlagen")
@@ -485,7 +622,8 @@ Gib NUR das übersetzte JSON zurück, ohne Text davor oder danach."""
                 # Mit mehr Wiederholungsversuchen übersetzen
                 translated_retry = translate_chunk_with_openai(retry_chunk, chunk_number, max_retries=5)
                 
-                if translated_retry:
+                if translated_retry is not None:
+                    save_chunk_result(chunk_number, translated_retry)
                     # Übersetzte Einträge hinzufügen
                     for item in translated_retry:
                         if item['id'] not in translated_ids:
@@ -493,8 +631,10 @@ Gib NUR das übersetzte JSON zurück, ohne Text davor oder danach."""
                             translated_ids.add(item['id'])
                     
                     # Speichern
-                    with open(output_file, 'w', encoding='utf-8') as f:
-                        json.dump(translated_data, f, indent=2, ensure_ascii=False)
+                    merged_data = merge_chunk_files(output_file, max_chunk_number=chunk_number)
+                    if merged_data is None:
+                        with open(output_file, 'w', encoding='utf-8') as f:
+                            json.dump(translated_data, f, indent=2, ensure_ascii=False)
                     
                     print(f"  ✓ Nachholen erfolgreich - Fortschritt: {len(translated_data)}/{len(data)}")
                     retry_position += len(retry_chunk)
@@ -516,8 +656,12 @@ Gib NUR das übersetzte JSON zurück, ohne Text davor oder danach."""
             break
 
     # Endstand speichern
-    with open(output_file, 'w', encoding='utf-8') as f:
-        json.dump(translated_data, f, indent=2, ensure_ascii=False)
+    merged_data = merge_chunk_files(output_file, max_chunk_number=chunk_number)
+    if merged_data is not None:
+        translated_data = merged_data
+    else:
+        with open(output_file, 'w', encoding='utf-8') as f:
+            json.dump(translated_data, f, indent=2, ensure_ascii=False)
     
     # Abschlussprüfung unter Berücksichtigung möglicher Duplikate
     print("\n" + "="*60)

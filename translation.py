@@ -162,7 +162,6 @@ def translate_chunk_with_claude(chunk, chunk_number, max_retries=3):
     # Aktuell kein Vorprozessing nötig
     processed_chunk = chunk
     id_mapping = {}
-    has_apostrophes = False
     
     # Prompt erstellen
     prompt = """Übersetze das folgende JSON vollständig ins Deutsche und gib ausschließlich das übersetzte JSON-Array zurück.
@@ -189,12 +188,6 @@ ZU ÜBERSETZENDES JSON:
     
     chunk_json = json.dumps(processed_chunk, indent=2, ensure_ascii=False)
     full_prompt = prompt + chunk_json
-    
-    # Debug: gesendetes JSON für Einträge mit Apostrophen ausgeben
-    if has_apostrophes:
-        print(f"  [DEBUG] Gesendetes JSON (nach Vorprozessing):")
-        for item in processed_chunk:
-            print(f"    ID: {item['id']}")
     
     for attempt in range(max_retries):
         try:
@@ -226,13 +219,6 @@ ZU ÜBERSETZENDES JSON:
                     continue
                 print("  ✗ Ungültiges Antwortformat nach allen Versuchen")
                 return None
-            
-            # Debug: Antwort für Einträge mit Apostrophen ausgeben
-            if has_apostrophes:
-                first_line = response.split('\n')[0][:100]
-                print(f"  [DEBUG] Claude-Antwort (erste Zeile): {first_line}...")
-                if len(response) < 1000:
-                    print(f"  [DEBUG] Vollständige Antwort:\n{response}")
             
             # JSON aus Antwort extrahieren
             translated_chunk, extracted_json = extract_json_from_response(response)
@@ -267,6 +253,8 @@ ZU ÜBERSETZENDES JSON:
                     return None
 
                 translated_by_id = {item['id']: item for item in translated_chunk}
+                # Sobald ein Problem gefunden wird, löst "break" einen erneuten Versuch aus.
+                # Nur wenn die Schleife komplett ohne "break" durchläuft, ist alles validiert.
                 for source_item in chunk:
                     source_id = source_item['id']
                     translated_item = translated_by_id.get(source_id)
@@ -358,7 +346,7 @@ def main():
     position = 0
     chunk_number = 0
     
-    # Set zur Nachverfolgung bereits übersetzter IDs
+    # Bereits übersetzte IDs nachverfolgen
     translated_ids = set()
     
     # Einträge verarbeiten

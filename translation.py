@@ -58,7 +58,12 @@ def load_text_file(path: str, max_chars: int = 8000) -> str:
 
 
 def schema_for_value(value: Any, force_id: str = "") -> Dict[str, Any]:
-    """Erzeugt ein JSON-Schema für einen Wert, optional mit fixer ID-`const`."""
+    """
+    Erzeugt ein JSON-Schema für einen beliebigen Python-Wert.
+
+    Wenn `force_id` gesetzt ist, wird ein String-Schema mit `const` erzeugt, um
+    unveränderte IDs in der Modellantwort zu erzwingen.
+    """
     if value is None:
         return {"type": "null"}
 
@@ -153,7 +158,17 @@ STIL-REFERENZ (Ton, Rhythmus, Terminologie):
 
 
 def validate_structure(original: Any, translated: Any, path: str = "$") -> Tuple[bool, str]:
-    """Validiert rekursiv, dass Struktur/Typen/IDs der Übersetzung unverändert bleiben."""
+    """
+    Validiert rekursiv, dass die Übersetzung die Originalstruktur exakt beibehält.
+
+    Args:
+        original: Ursprungswert aus dem Input-JSON.
+        translated: Entsprechender Wert aus der Modellantwort.
+        path: JSONPath-ähnlicher Pfad für präzise Fehlermeldungen.
+
+    Returns:
+        Tuple[bool, str]: (True, "") bei Erfolg, sonst (False, Fehlermeldung).
+    """
     if original is None:
         if translated is not None:
             return False, f"{path}: expected null"
@@ -213,7 +228,13 @@ def call_openai_translate(
     chunk: List[Dict[str, Any]],
     timeout_seconds: int,
 ) -> List[Dict[str, Any]]:
-    """Ruft OpenAI mit JSON-Schema-Output auf und validiert das Antwort-Chunk."""
+    """
+    Führt einen OpenAI-API-Aufruf mit strict JSON-Schema aus und validiert das Ergebnis.
+
+    Raises:
+        requests.RequestException / requests.HTTPError bei Transport/API-Fehlern.
+        ValueError/KeyError/JSONDecodeError bei ungültiger oder strukturfalscher Antwort.
+    """
     schema = build_response_schema(chunk)
     payload = {
         "model": MODEL_NAME,
@@ -260,6 +281,12 @@ def translate_chunk_with_retry(
     max_retries: int = 4,
     timeout_seconds: int = 180,
 ) -> List[Dict[str, Any]]:
+    """
+    Übersetzt ein Chunk mit Retry-Logik und exponentiellem Backoff.
+
+    Bei vollständigem Fehlschlag wird eine leere Liste zurückgegeben, damit der
+    Aufrufer die Chunk-Größe reduzieren oder den Lauf abbrechen kann.
+    """
     print(f"\nÜbersetzung von Chunk {chunk_number} ({len(chunk)} Einträge)")
 
     for attempt in range(1, max_retries + 1):

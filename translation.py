@@ -447,7 +447,6 @@ def main():
                 if current_chunk_size > 1:
                     current_chunk_size -= 1
                     print(f"  Reduziere Größe auf {current_chunk_size}")
-                    continue
                 else:
                     # Wenn sogar mit 1 Eintrag fehlgeschlagen: nächsten Eintrag versuchen
                     print("  Dieser Eintrag konnte nicht übersetzt werden, nächster Eintrag")
@@ -461,7 +460,6 @@ def main():
                 current_chunk_size -= 1
                 print(f"  Reduziere Größe auf {current_chunk_size}")
                 # Position bleibt gleich: derselbe Chunk mit weniger Einträgen
-                continue
             else:
                 # Timeout auch mit 1 Eintrag: nächsten Eintrag versuchen
                 print("  Timeout auch mit 1 Eintrag, nächster Eintrag")

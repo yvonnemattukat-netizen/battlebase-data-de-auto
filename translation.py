@@ -391,7 +391,7 @@ def main():
         sys.exit(1)  # Exit immediately if the output file is not writable
 
     # Variablen für adaptive Chunk-Logik
-    current_chunk_size = 18  # Start mit 18 Einträgen
+    current_chunk_size = 14  # Start mit 14 Einträgen
     optimal_chunk_size = None  # Gefundene optimale Chunk-Größe
     position = 0
     chunk_number = 0

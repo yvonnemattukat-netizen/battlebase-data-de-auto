@@ -110,7 +110,7 @@ def validate_translated_item_structure(source_item, translated_item, path=""):
     """Prüft rekursiv Struktur, Datentypen und unveränderte IDs."""
     current_path = path or "$"
 
-    if type(source_item) is not type(translated_item):
+    if type(source_item) != type(translated_item):
         return False, f"Typabweichung bei {current_path}: {type(source_item).__name__} != {type(translated_item).__name__}"
 
     if isinstance(source_item, dict):
@@ -283,6 +283,7 @@ ZU ÜBERSETZENDES JSON:
                             break
                         print(f"  ✗ Strukturprüfung fehlgeschlagen: {error}")
                         return None
+                # for-else: nur wenn kein "break" im Loop ausgelöst wurde, ist der Chunk gültig
                 else:
                     return translated_chunk
             else:

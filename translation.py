@@ -391,8 +391,8 @@ def main():
         sys.exit(1)  # Exit immediately if the output file is not writable
 
     # Variablen für adaptive Chunk-Logik
-    current_chunk_size = 14  # Start mit 14 Einträgen
-    optimal_chunk_size = None  # Gefundene optimale Chunk-Größe
+    optimal_chunk_size = 14  # Nur Startgröße für den ersten Chunk-Versuch
+    current_chunk_size = optimal_chunk_size
     position = 0
     chunk_number = 0
 
@@ -403,27 +403,7 @@ def main():
     while position < len(data):
         chunk_number += 1
 
-        # Wenn eine optimale Größe existiert und nicht kürzlich timeoutete, diese verwenden
-        if optimal_chunk_size is not None and current_chunk_size >= optimal_chunk_size:
-            current_chunk_size = optimal_chunk_size
-
-            # Verbleibende Chunks berechnen
-            entries_remaining = len(data) - position
-            chunks_remaining = (entries_remaining + current_chunk_size - 1) // current_chunk_size
-            estimated_time_seconds = chunks_remaining * 120  # 1 Chunk ~= 2 Minuten
-
-            # Ausgabeformat hh:mm:ss
-            hours = estimated_time_seconds // 3600
-            minutes = (estimated_time_seconds % 3600) // 60
-            seconds = estimated_time_seconds % 60
-
-            print(f"\n{'='*60}")
-            print(f"Verwendung der optimalen Größe: {current_chunk_size} Einträge/Chunk")
-            print(f"Verbleibende Chunks: {chunks_remaining}")
-            print(f"Geschätzte Zeit: ~{hours:02d}:{minutes:02d}:{seconds:02d}")
-            print(f"{'='*60}")
-        else:
-            print(f"\nTest mit {current_chunk_size} Einträgen/Chunk")
+        print(f"\nTest mit {current_chunk_size} Einträgen/Chunk")
 
         # Chunk extrahieren
         chunk = data[position:position + current_chunk_size]
@@ -448,11 +428,6 @@ def main():
                         translated_ids.add(item['id'])
 
                 position += len(chunk)
-
-                # Optimale Chunk-Größe aktualisieren
-                if optimal_chunk_size is None or current_chunk_size < optimal_chunk_size:
-                    optimal_chunk_size = current_chunk_size
-                    print(f"  ✅ Optimale Größe {'bestätigt' if optimal_chunk_size == current_chunk_size else 'aktualisiert'}: {optimal_chunk_size} Einträge/Chunk")
 
                 # Nach jedem Chunk speichern
                 merged_data = merge_chunk_files(output_file, max_chunk_number=chunk_number)
@@ -484,10 +459,6 @@ def main():
                 # Größe um 1 reduzieren
                 current_chunk_size -= 1
                 print(f"  Reduziere Größe auf {current_chunk_size}")
-                # Falls die optimale Größe timeoutete, anpassen
-                if optimal_chunk_size and optimal_chunk_size > current_chunk_size:
-                    optimal_chunk_size = current_chunk_size
-                    print(f"  Optimale Größe aktualisiert auf {optimal_chunk_size}")
                 # Position bleibt gleich: derselbe Chunk mit weniger Einträgen
             else:
                 # Timeout auch mit 1 Eintrag: nächsten Eintrag versuchen

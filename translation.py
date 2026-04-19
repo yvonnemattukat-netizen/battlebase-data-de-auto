@@ -187,7 +187,14 @@ KRITISCHE REGELN:
 6. Ausnahme: Der Wert von Schlüsseln mit Namen "id" darf niemals verändert werden.
 7. Schlüssel-Namen, Zahlen, Booleans und null müssen unverändert bleiben.
 8. Datentypen dürfen nicht geändert werden.
-9. Kontext: Warhammer 40.000-Regeln, nutze passendes Fachvokabular.
+9. Stil-Priorität: Natürliches, korrektes und gut verständliches Deutsch ist wichtiger als eine wörtliche 40K-Übersetzung.
+10. Formuliere aktiv, klar und möglichst in kurzen Sätzen. Vermeide holprige oder unnötig verschachtelte Formulierungen.
+11. Vermeide unklare Pronomen wie "sie/ihr/deren", wenn die Referenz unklar sein kann. Nutze stattdessen eindeutige Formulierungen wie "der Spieler" oder "der Spieler, dessen Zug es ist".
+12. Terminologie konsistent halten: gleiche Begriffe innerhalb eines Textes immer gleich übersetzen.
+13. Verwende in Regeltexten "SP (Siegpunkte)" statt "VP" (z. B. "3 SP", "bis zu 15 SP pro Runde").
+14. Übersetze "CHARACTER" und "CHARAKTER" als "Charakter"; verwende für "CHARACTER models"/"CHARAKTER-Modelle" bevorzugt "Charakter-Modelle".
+15. Behalte die vorhandene String-Formatierung bestmöglich bei (Absätze, Zeilenumbrüche, Aufzählungspunkte wie •).
+16. Mini-Glossar: VP -> SP (Siegpunkte); CHARACTER models/CHARAKTER-Modelle -> Charakter-Modelle.
 
 ZU ÜBERSETZENDES JSON:
 """

@@ -254,7 +254,8 @@ ZU ÜBERSETZENDES JSON:
 
                 translated_by_id = {item['id']: item for item in translated_chunk}
                 # Sobald ein Problem gefunden wird, löst "break" einen erneuten Versuch aus.
-                # Nur wenn die Schleife komplett ohne "break" durchläuft, ist alles validiert.
+                # Der nachfolgende for-else-Block ist der eigentliche Erfolgsfall:
+                # Er läuft nur, wenn diese Schleife komplett ohne "break" endet.
                 for source_item in chunk:
                     source_id = source_item['id']
                     translated_item = translated_by_id.get(source_id)
@@ -500,7 +501,7 @@ def main():
                         print("  ✗ Übersetzung fehlgeschlagen")
                         # Als letzte Option: manuelle Einzelübersetzung
                         print("  Manueller Übersetzungsversuch...")
-                        manual_prompt = f"""Übersetze dieses Warhammer-40.000-Stratagem vollständig ins Deutsche. Gib NUR ein gültiges JSON-Objekt zurück.
+                        manual_prompt = f"""Übersetze dieses Warhammer 40.000 Stratagem vollständig ins Deutsche. Gib NUR ein gültiges JSON-Objekt zurück.
 
 {json.dumps(entry, indent=2, ensure_ascii=False)}
 

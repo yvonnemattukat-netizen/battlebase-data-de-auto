@@ -58,6 +58,7 @@ def load_text_file(path: str, max_chars: int = 8000) -> str:
 
 
 def schema_for_value(value: Any, force_id: str = "") -> Dict[str, Any]:
+    """Erzeugt ein JSON-Schema für einen Wert, optional mit fixer ID-`const`."""
     if value is None:
         return {"type": "null"}
 
@@ -109,6 +110,7 @@ def schema_for_value(value: Any, force_id: str = "") -> Dict[str, Any]:
 
 
 def build_response_schema(chunk: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """Erzeugt ein striktes Array-Schema mit exakt derselben Chunk-Struktur."""
     return {
         "type": "array",
         "minItems": len(chunk),
@@ -151,6 +153,7 @@ STIL-REFERENZ (Ton, Rhythmus, Terminologie):
 
 
 def validate_structure(original: Any, translated: Any, path: str = "$") -> Tuple[bool, str]:
+    """Validiert rekursiv, dass Struktur/Typen/IDs der Übersetzung unverändert bleiben."""
     if original is None:
         if translated is not None:
             return False, f"{path}: expected null"
@@ -202,6 +205,7 @@ def call_openai_translate(
     chunk: List[Dict[str, Any]],
     timeout_seconds: int,
 ) -> List[Dict[str, Any]]:
+    """Ruft OpenAI mit JSON-Schema-Output auf und validiert das Antwort-Chunk."""
     schema = build_response_schema(chunk)
     payload = {
         "model": MODEL_NAME,
@@ -287,7 +291,9 @@ def main() -> None:
 
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
-        raise RuntimeError("OPENAI_API_KEY is not set. See usage instructions at top of translation.py")
+        raise RuntimeError(
+            f"OPENAI_API_KEY is not set. See usage instructions at top of {os.path.basename(__file__)}"
+        )
 
     style_guide = load_text_file(STYLE_GUIDE_FILE, max_chars=8000)
     glossary = load_json_file(GLOSSARY_FILE)

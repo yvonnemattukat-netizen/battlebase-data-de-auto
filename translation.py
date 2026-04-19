@@ -243,7 +243,7 @@ def merge_chunk_files(output_file, max_chunk_number=None):
         if not (filename.startswith('chunk_') and filename.endswith('.json')):
             continue
         try:
-            chunk_no = int(filename[6:10])
+            chunk_no = int(filename.replace('chunk_', '').replace('.json', ''))
         except ValueError:
             continue
         if max_chunk_number is not None and chunk_no > max_chunk_number:
@@ -281,19 +281,19 @@ def translate_chunk_with_openai(chunk, chunk_number, max_retries=3):
 KRITISCHE REGELN:
 1. Gib ausschließlich ein gültiges JSON-Array zurück (kein Markdown, keine ```json```-Codefences).
 2. Niemals Erklärungen, Kommentare oder sonstigen Zusatztext ausgeben.
-4. Die JSON-Struktur exakt beibehalten (Objekte, Arrays, Reihenfolge, Schlüssel).
-5. Jeder String-Wert muss rekursiv ins Deutsche übersetzt werden – in allen Feldern und Ebenen.
-6. Ausnahme: Der Wert von Schlüsseln mit Namen "id" darf niemals verändert werden.
-7. Schlüssel-Namen, Zahlen, Booleans und null müssen unverändert bleiben.
-8. Datentypen dürfen nicht geändert werden.
-9. Stil-Priorität: Natürliches, korrektes und gut verständliches Deutsch ist wichtiger als eine wörtliche 40K-Übersetzung.
-10. Formuliere aktiv, klar und möglichst in kurzen Sätzen. Vermeide holprige oder unnötig verschachtelte Formulierungen.
-11. Vermeide unklare Pronomen wie "sie/ihr/deren", wenn die Referenz unklar sein kann. Nutze stattdessen eindeutige Formulierungen wie "der Spieler" oder "der Spieler, dessen Zug es ist".
-12. Terminologie konsistent halten: gleiche Begriffe innerhalb eines Textes immer gleich übersetzen.
-13. Verwende in Regeltexten "SP (Siegpunkte)" statt "VP" (z. B. "3 SP", "bis zu 15 SP pro Runde").
-14. Übersetze "CHARACTER" und "CHARAKTER" als "Charakter"; verwende für "CHARACTER models"/"CHARAKTER-Modelle" bevorzugt "Charakter-Modelle".
-15. Behalte die vorhandene String-Formatierung bestmöglich bei (Absätze, Zeilenumbrüche, Aufzählungspunkte wie •).
-16. Mini-Glossar: VP -> SP (Siegpunkte); CHARACTER models/CHARAKTER-Modelle -> Charakter-Modelle.
+3. Die JSON-Struktur exakt beibehalten (Objekte, Arrays, Reihenfolge, Schlüssel).
+4. Jeder String-Wert muss rekursiv ins Deutsche übersetzt werden – in allen Feldern und Ebenen.
+5. Ausnahme: Der Wert von Schlüsseln mit Namen "id" darf niemals verändert werden.
+6. Schlüssel-Namen, Zahlen, Booleans und null müssen unverändert bleiben.
+7. Datentypen dürfen nicht geändert werden.
+8. Stil-Priorität: Natürliches, korrektes und gut verständliches Deutsch ist wichtiger als eine wörtliche 40K-Übersetzung.
+9. Formuliere aktiv, klar und möglichst in kurzen Sätzen. Vermeide holprige oder unnötig verschachtelte Formulierungen.
+10. Vermeide unklare Pronomen wie "sie/ihr/deren", wenn die Referenz unklar sein kann. Nutze stattdessen eindeutige Formulierungen wie "der Spieler" oder "der Spieler, dessen Zug es ist".
+11. Terminologie konsistent halten: gleiche Begriffe innerhalb eines Textes immer gleich übersetzen.
+12. Verwende in Regeltexten "SP (Siegpunkte)" statt "VP" (z. B. "3 SP", "bis zu 15 SP pro Runde").
+13. Übersetze "CHARACTER" und "CHARAKTER" als "Charakter"; verwende für "CHARACTER models"/"CHARAKTER-Modelle" bevorzugt "Charakter-Modelle".
+14. Behalte die vorhandene String-Formatierung bestmöglich bei (Absätze, Zeilenumbrüche, Aufzählungspunkte wie •).
+15. Mini-Glossar: VP -> SP (Siegpunkte); CHARACTER models/CHARAKTER-Modelle -> Charakter-Modelle.
 
 ZU ÜBERSETZENDES JSON:
 """
@@ -437,7 +437,7 @@ def main():
                 # Chunk übersetzen
                 translated_chunk = translate_chunk_with_openai(chunk, chunk_number)
 
-            if translated_chunk:
+            if translated_chunk is not None:
                 if not used_existing_chunk:
                     save_chunk_result(chunk_number, translated_chunk)
 
@@ -541,7 +541,7 @@ def main():
                     chunk_number += 1
                     print(f"\nEinzelübersetzung von: {entry['id']}")
                     translated_single = translate_chunk_with_openai([entry], chunk_number, max_retries=5)
-                    if translated_single:
+                    if translated_single is not None:
                         save_chunk_result(chunk_number, translated_single)
                         added = False
                         for item in translated_single:
@@ -622,7 +622,7 @@ Gib NUR das übersetzte JSON zurück, ohne Text davor oder danach."""
                 # Mit mehr Wiederholungsversuchen übersetzen
                 translated_retry = translate_chunk_with_openai(retry_chunk, chunk_number, max_retries=5)
                 
-                if translated_retry:
+                if translated_retry is not None:
                     save_chunk_result(chunk_number, translated_retry)
                     # Übersetzte Einträge hinzufügen
                     for item in translated_retry:

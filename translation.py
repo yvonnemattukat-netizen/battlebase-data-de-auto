@@ -7,6 +7,7 @@ OpenAI API-Key erstellen:
 1) https://platform.openai.com öffnen
 2) Sign in -> API keys -> "Create new secret key"
 3) Key sicher speichern (wird danach nicht mehr vollständig angezeigt)
+WICHTIG: Niemals den API-Key in Git committen oder im Quellcode speichern.
 
 `OPENAI_API_KEY` setzen:
 - Windows PowerShell:
@@ -99,7 +100,7 @@ def schema_for_value(value: Any, force_id: str = "") -> Dict[str, Any]:
             "additionalProperties": False,
         }
 
-    # fallback für unerwartete Typen
+    # Fallback für unerwartete Typen
     return {"type": "string"}
 
 
@@ -243,21 +244,21 @@ def translate_chunk_with_retry(
     max_retries: int = 4,
     timeout_seconds: int = 180,
 ) -> List[Dict[str, Any]]:
-    print(f"\nTraduction chunk {chunk_number} ({len(chunk)} entrées)")
+    print(f"\nÜbersetzung von Chunk {chunk_number} ({len(chunk)} Einträge)")
 
     for attempt in range(1, max_retries + 1):
         try:
             if attempt > 1:
                 print(f"  Retry {attempt}/{max_retries}...")
             translated = call_openai_translate(api_key, style_guide, glossary, chunk, timeout_seconds)
-            print("  ✓ Chunk traduit")
+            print("  ✓ Chunk übersetzt")
             return translated
         except requests.HTTPError as exc:
             status = exc.response.status_code if exc.response is not None else "unknown"
             body = exc.response.text[:500] if exc.response is not None else str(exc)
             print(f"  ✗ HTTP error ({status}): {body}")
         except (requests.RequestException, json.JSONDecodeError, KeyError, ValueError) as exc:
-            print(f"  ✗ Erreur: {type(exc).__name__}: {exc}")
+            print(f"  ✗ Fehler: {type(exc).__name__}: {exc}")
 
         if attempt < max_retries:
             sleep_seconds = min(20, 2 ** attempt)

@@ -1,2 +1,4 @@
 CLAUDE.md
 battlebase-data-en.json
+__pycache__/
+*.pyc

@@ -175,7 +175,7 @@ KRITISCHE REGELN:
 6. Ausnahme: Der Wert von Schlüsseln mit Namen "id" darf niemals verändert werden.
 7. Schlüssel-Namen, Zahlen, Booleans und null müssen unverändert bleiben.
 8. Datentypen dürfen nicht geändert werden.
-9. Kontext: Warhammer-40.000-Regeln, nutze passendes Fachvokabular.
+9. Kontext: Warhammer 40.000-Regeln, nutze passendes Fachvokabular.
 
 BEISPIEL KORREKTE ANTWORT:
 [{"id":"abc123","body":"Ins Deutsche übersetzter Text","name":"Übersetzter Name"}]
@@ -253,9 +253,8 @@ ZU ÜBERSETZENDES JSON:
                     return None
 
                 translated_by_id = {item['id']: item for item in translated_chunk}
-                # Sobald ein Problem gefunden wird, löst "break" einen erneuten Versuch aus.
-                # Der nachfolgende for-else-Block ist der eigentliche Erfolgsfall:
-                # Er läuft nur, wenn diese Schleife komplett ohne "break" endet.
+                # Validierungsschleife: Jeder "break" bedeutet Fehler und neuen Versuch;
+                # der for-else-Erfolgsfall tritt nur ohne "break" ein.
                 for source_item in chunk:
                     source_id = source_item['id']
                     translated_item = translated_by_id.get(source_id)

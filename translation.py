@@ -7,57 +7,6 @@ import sys
 import time
 from datetime import datetime
 
-def download_latest_file():
-    """Télécharge la dernière version du fichier depuis GitHub"""
-    url = "https://raw.githubusercontent.com/plague-fetishist/battlebase-data-full/refs/heads/main/battlebase-data.json"
-    print(f"Téléchargement du fichier depuis: {url}")
-    
-    try:
-        response = requests.get(url)
-        response.raise_for_status()
-        
-        # Charger le JSON pour modifier uniquement les IDs
-        data = json.loads(response.text)
-        
-        # Liste des apostrophes à remplacer (utilisation des codes Unicode)
-        apostrophes_to_replace = [
-            "\u0027",  # U+0027 APOSTROPHE
-            "\u2019",  # U+2019 RIGHT SINGLE QUOTATION MARK
-            "\u2018",  # U+2018 LEFT SINGLE QUOTATION MARK
-            "\u201A",  # U+201A SINGLE LOW-9 QUOTATION MARK
-            "\u201B",  # U+201B SINGLE HIGH-REVERSED-9 QUOTATION MARK
-            "\u00B4",  # U+00B4 ACUTE ACCENT
-            "\u0060",  # U+0060 GRAVE ACCENT
-            "\u2032",  # U+2032 PRIME
-            "\u2035",  # U+2035 REVERSED PRIME
-            "\u02B9",  # U+02B9 MODIFIER LETTER PRIME
-            "\u02BC",  # U+02BC MODIFIER LETTER APOSTROPHE
-        ]
-        
-        # Remplacer les apostrophes dans les IDs uniquement
-        count = 0
-        for item in data:
-            if 'id' in item:
-                original_id = item['id']
-                new_id = original_id
-                for apostrophe in apostrophes_to_replace:
-                    new_id = new_id.replace(apostrophe, "_")
-                if new_id != original_id:
-                    item['id'] = new_id
-                    count += 1
-        
-        print(f"Remplacement des apostrophes dans {count} IDs")
-        
-        # Sauvegarder avec le suffixe -en
-        with open('battlebase-data-en.json', 'w', encoding='utf-8') as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
-        
-        print("Fichier téléchargé avec succès (sauvegardé comme battlebase-data-en.json)")
-        return True
-    except Exception as e:
-        print(f"Erreur lors du téléchargement: {e}")
-        return False
-
 def extract_json_from_response(response):
     """Extrait le JSON de la réponse de Claude, même s'il y a du texte avant/après"""
     # Rechercher le premier [ et le dernier ]
@@ -306,10 +255,6 @@ def main():
     # Créer le répertoire reports s'il n'existe pas
     import os
     os.makedirs('reports', exist_ok=True)
-    
-    # Télécharger le fichier
-    if not download_latest_file():
-        return
     
     # Charger le fichier original
     print("\nChargement du fichier...")

@@ -160,16 +160,24 @@ def validate_structure(original: Any, translated: Any, path: str = "$") -> Tuple
         return True, ""
 
     if isinstance(original, bool):
-        return (isinstance(translated, bool), f"{path}: expected bool")
+        if isinstance(translated, bool):
+            return True, ""
+        return False, f"{path}: expected bool"
 
     if isinstance(original, int):
-        return (isinstance(translated, int), f"{path}: expected int")
+        if isinstance(translated, int):
+            return True, ""
+        return False, f"{path}: expected int"
 
     if isinstance(original, float):
-        return (isinstance(translated, (int, float)) and not isinstance(translated, bool), f"{path}: expected number")
+        if isinstance(translated, (int, float)) and not isinstance(translated, bool):
+            return True, ""
+        return False, f"{path}: expected number"
 
     if isinstance(original, str):
-        return (isinstance(translated, str), f"{path}: expected string")
+        if isinstance(translated, str):
+            return True, ""
+        return False, f"{path}: expected string"
 
     if isinstance(original, list):
         if not isinstance(translated, list):

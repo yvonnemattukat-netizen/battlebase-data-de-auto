@@ -63,7 +63,7 @@ def schema_for_value(value: Any, force_id: str = "") -> Dict[str, Any]:
     if isinstance(value, bool):
         return {"type": "boolean"}
 
-    if isinstance(value, int) and not isinstance(value, bool):
+    if isinstance(value, int):
         return {"type": "integer"}
 
     if isinstance(value, float):
@@ -155,8 +155,8 @@ def validate_structure(original: Any, translated: Any, path: str = "$") -> Tuple
     if isinstance(original, bool):
         return (isinstance(translated, bool), f"{path}: expected bool")
 
-    if isinstance(original, int) and not isinstance(original, bool):
-        return (isinstance(translated, int) and not isinstance(translated, bool), f"{path}: expected int")
+    if isinstance(original, int):
+        return (isinstance(translated, int), f"{path}: expected int")
 
     if isinstance(original, float):
         return (isinstance(translated, (int, float)) and not isinstance(translated, bool), f"{path}: expected number")

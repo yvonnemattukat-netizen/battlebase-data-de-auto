@@ -6,6 +6,15 @@ import requests
 import sys
 import time
 from datetime import datetime
+import os
+import openai
+
+# OpenAI API-Schlüssel aus der Systemumgebungsvariable ladenecho $Env:OPENAI_API_KEY
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
+if not openai.api_key:
+    print("Error: OPENAI_API_KEY environment variable is not set.")
+    sys.exit(1)  # Exit if the API key is not found
 
 def extract_json_from_response(response):
     """Extrahiert JSON aus der Claude-Antwort, auch bei zusätzlichem Text."""
@@ -155,14 +164,17 @@ def validate_translated_item_structure(source_item, translated_item, path=""):
 
     return True, None
 
-def translate_chunk_with_claude(chunk, chunk_number, max_retries=3):
-    """Übersetzt einen Chunk mit Claude inkl. automatischer Wiederholungsversuche."""
+def check_executable_exists(executable):
+    """Prüft, ob ein ausführbares Programm im Systempfad vorhanden ist."""
+    from shutil import which
+    if which(executable) is None:
+        print(f"Error: Executable '{executable}' not found in PATH.")
+        sys.exit(1)
+
+def translate_chunk_with_openai(chunk, chunk_number):
+    """Übersetzt einen Chunk mit der OpenAI API."""
     print(f"\nÜbersetzung von Chunk {chunk_number} ({len(chunk)} Einträge)...")
-    
-    # Aktuell kein Vorprozessing nötig
-    processed_chunk = chunk
-    id_mapping = {}
-    
+
     # Prompt erstellen
     prompt = """Übersetze das folgende JSON vollständig ins Deutsche und gib ausschließlich das übersetzte JSON-Array zurück.
 
@@ -177,196 +189,106 @@ KRITISCHE REGELN:
 8. Datentypen dürfen nicht geändert werden.
 9. Kontext: Warhammer 40.000-Regeln, nutze passendes Fachvokabular.
 
-BEISPIEL KORREKTE ANTWORT:
-[{"id":"abc123","body":"Ins Deutsche übersetzter Text","name":"Übersetzter Name"}]
-
-BEISPIEL FALSCHE ANTWORT:
-Hier ist die Übersetzung: [{"id":"abc123","body":"..."}]
-
 ZU ÜBERSETZENDES JSON:
 """
-    
-    chunk_json = json.dumps(processed_chunk, indent=2, ensure_ascii=False)
+
+    chunk_json = json.dumps(chunk, indent=2, ensure_ascii=False)
     full_prompt = prompt + chunk_json
-    
-    for attempt in range(max_retries):
-        try:
-            # Claude aufrufen
-            if attempt > 0:
-                print(f"  Versuch {attempt + 1}/{max_retries}...")
-            
-            result = subprocess.run(
-                ['claude'],
-                input=full_prompt,
-                capture_output=True,
-                text=True,
-                encoding='utf-8',
-                timeout=120  # Timeout: 2 Minuten
-            )
-            
-            if result.returncode != 0:
-                print(f"  Claude-Fehler (Code {result.returncode})")
-                print(f"  Stderr: {result.stderr}")
-                if result.stdout:
-                    print(f"  Stdout: {result.stdout}")
-                continue
-            
-            response = result.stdout.strip()
 
-            if not (response.startswith('[') and response.endswith(']')):
-                if attempt < max_retries - 1:
-                    print("  ✗ Ungültiges Antwortformat: Muss mit [ beginnen und mit ] enden. Neuer Versuch...")
-                    continue
-                print("  ✗ Ungültiges Antwortformat nach allen Versuchen")
-                return None
-            
-            # JSON aus Antwort extrahieren
-            translated_chunk, extracted_json = extract_json_from_response(response)
-            
-            if translated_chunk:
-                # Originale IDs bei Bedarf wiederherstellen
-                if id_mapping:
-                    translated_chunk = postprocess_translated_chunk(translated_chunk, id_mapping)
-                    print("  ✓ Original-IDs wiederhergestellt")
-                
-                print("  ✓ Chunk erfolgreich übersetzt")
-                # Prüfen, ob die Anzahl der Einträge unverändert blieb
-                if len(translated_chunk) != len(chunk):
-                    print(f"  ⚠️  Achtung: {len(chunk)} Einträge gesendet, {len(translated_chunk)} empfangen")
-                    # Fehlende IDs anzeigen
-                    sent_ids = {item['id'] for item in chunk}
-                    received_ids = {item['id'] for item in translated_chunk}
-                    missing_ids = sent_ids - received_ids
-                    if missing_ids:
-                        print(f"  Fehlende IDs in der Antwort: {missing_ids}")
-                    if attempt < max_retries - 1:
-                        print("  Neuer Versuch...")
-                        continue
+    print(f"  Prompt erstellt, Länge: {len(full_prompt)} Zeichen")
 
-                sent_ids = {item['id'] for item in chunk}
-                received_ids = {item['id'] for item in translated_chunk}
-                if sent_ids != received_ids:
-                    if attempt < max_retries - 1:
-                        print(f"  ⚠️  ID-Menge geändert (gesendet={len(sent_ids)}, empfangen={len(received_ids)}). Neuer Versuch...")
-                        continue
-                    print("  ✗ ID-Menge nach allen Versuchen verändert")
-                    return None
+    try:
+        # OpenAI API aufrufen
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": "Du bist ein hilfreicher Übersetzer."},
+                {"role": "user", "content": full_prompt}
+            ]
+        )
 
-                translated_by_id = {item['id']: item for item in translated_chunk}
-                # Validierungsschleife: Jeder "break" bedeutet Fehler und neuen Versuch;
-                # der for-else-Erfolgsfall tritt nur ohne "break" ein.
-                for source_item in chunk:
-                    source_id = source_item['id']
-                    translated_item = translated_by_id.get(source_id)
-                    if translated_item is None:
-                        if attempt < max_retries - 1:
-                            print(f"  ⚠️  Eintrag mit ID '{source_id}' fehlt. Neuer Versuch...")
-                            break
-                        print(f"  ✗ Eintrag mit ID '{source_id}' fehlt nach allen Versuchen")
-                        return None
-                    is_valid, error = validate_translated_item_structure(source_item, translated_item)
-                    if not is_valid:
-                        if attempt < max_retries - 1:
-                            print(f"  ⚠️  Strukturprüfung fehlgeschlagen: {error}. Neuer Versuch...")
-                            break
-                        print(f"  ✗ Strukturprüfung fehlgeschlagen: {error}")
-                        return None
-                # for-else: nur wenn kein "break" im Loop ausgelöst wurde, ist der Chunk gültig
-                else:
-                    return translated_chunk
-            else:
-                if attempt < max_retries - 1:
-                    print("  ✗ Konnte kein gültiges JSON extrahieren, neuer Versuch...")
-                    # Vollständige Antwort für Debug ausgeben
-                    print("  Claude-Antwort:")
-                    print("-" * 60)
-                    print(response[:500] + "..." if len(response) > 500 else response)
-                    print("-" * 60)
-                else:
-                    print(f"  ✗ Konnte nach {max_retries} Versuchen kein gültiges JSON extrahieren")
-                    if "Execution error" in response or "error" in response.lower():
-                        print("  Claude hat einen Fehler gemeldet. Chunk-Größe wird reduziert.")
-                        return None  # None zurückgeben, damit das Skript mit kleinerem Chunk weitermacht
-                    else:
-                        print("  Vollständige Claude-Antwort:")
-                        print("-" * 60)
-                        print(response)
-                        print("-" * 60)
-                        # Problematische Antwort für Debug speichern
-                        debug_file = f"debug_chunk_{chunk_number}_attempt_{attempt}.txt"
-                        with open(debug_file, 'w', encoding='utf-8') as f:
-                            f.write(f"Prompt:\n{full_prompt}\n\n")
-                            f.write(f"Antwort:\n{response}")
-                        print(f"  Antwort in {debug_file} gespeichert")
-                        print("\nSkript wird beendet.")
-                        sys.exit(1)
-                    
-        except subprocess.TimeoutExpired:
-            print("  ✗ Timeout: Claude hat innerhalb von 2 Minuten nicht geantwortet")
-            raise  # Ausnahme erneut werfen, damit sie weiter oben behandelt wird
-        except Exception as e:
-            print(f"  ✗ Fehler: {type(e).__name__}: {e}")
-            if attempt < max_retries - 1:
-                print("  Neuer Versuch...")
-            else:
-                print(f"  ✗ Fehlgeschlagen nach {max_retries} Versuchen")
-                # Debug: IDs des Chunks ausgeben, um Apostroph-Probleme zu erkennen
-                ids_in_chunk = [item.get('id', 'NO_ID') for item in chunk]
-                if any("'" in id for id in ids_in_chunk):
-                    print("  ⚠️  Dieser Chunk enthält IDs mit Apostrophen:")
-                    for id in ids_in_chunk:
-                        if "'" in id:
-                            print(f"     - {id}")
-                return None
-    
-    return None
+        translated_chunk = response['choices'][0]['message']['content'].strip()
+
+        if not (translated_chunk.startswith('[') and translated_chunk.endswith(']')):
+            print("  ✗ Ungültiges Antwortformat: Muss mit [ beginnen und mit ] enden.")
+            sys.exit(1)  # Exit immediately on invalid response
+
+        print("  ✓ Chunk erfolgreich übersetzt")
+        return json.loads(translated_chunk)
+
+    except openai.error.OpenAIError as e:
+        print(f"  ✗ OpenAI API-Fehler: {e}")
+        sys.exit(1)  # Exit immediately on API error
 
 # Funktion push_to_github entfernt, da Authentifizierung nötig wäre
 # Push-Hinweise werden am Ende des Skripts ausgegeben
 
+def check_file_exists(file_path):
+    if not os.path.exists(file_path):
+        error_message = f"Error: File not found - {file_path}"
+        print(error_message)
+        try:
+            log_path = os.path.join(os.getcwd(), 'error_log.txt')
+            with open(log_path, 'a', encoding='utf-8') as log_file:  # Use 'a' mode to append to the file
+                log_file.write(f"[{datetime.now()}] {error_message}\n")
+            print(f"Logged error to: {log_path}")
+        except Exception as log_error:
+            print(f"Failed to write to log file: {log_error}")
+        sys.exit(1)  # Exit immediately if the file is not found
+
 def main():
     # Reports-Verzeichnis anlegen, falls es nicht existiert
-    import os
     os.makedirs('reports', exist_ok=True)
-    
+
     # Originaldatei laden
+    input_file = 'battlebase-data-en.json'
+    check_file_exists(input_file)  # Exit immediately if the file is missing
+
     print("\nDatei wird geladen...")
-    with open('battlebase-data-en.json', 'r', encoding='utf-8') as f:
+    with open(input_file, 'r', encoding='utf-8') as f:
         data = json.load(f)
-    
+
     print(f"Gesamt: {len(data)} Einträge")
-    
+
     # Initialisieren
     translated_data = []
     output_file = 'battlebase-data.json'
-    
+
+    # Check if output file is writable
+    try:
+        with open(output_file, 'w', encoding='utf-8') as f:
+            pass
+    except IOError:
+        print(f"Error: Cannot write to output file - {output_file}")
+        sys.exit(1)  # Exit immediately if the output file is not writable
+
     # Variablen für adaptive Chunk-Logik
     current_chunk_size = 18  # Start mit 18 Einträgen
     optimal_chunk_size = None  # Gefundene optimale Chunk-Größe
     position = 0
     chunk_number = 0
-    
+
     # Bereits übersetzte IDs nachverfolgen
     translated_ids = set()
-    
+
     # Einträge verarbeiten
     while position < len(data):
         chunk_number += 1
-        
+
         # Wenn eine optimale Größe existiert und nicht kürzlich timeoutete, diese verwenden
         if optimal_chunk_size is not None and current_chunk_size >= optimal_chunk_size:
             current_chunk_size = optimal_chunk_size
-            
+
             # Verbleibende Chunks berechnen
             entries_remaining = len(data) - position
             chunks_remaining = (entries_remaining + current_chunk_size - 1) // current_chunk_size
             estimated_time_seconds = chunks_remaining * 120  # 1 Chunk ~= 2 Minuten
-            
+
             # Ausgabeformat hh:mm:ss
             hours = estimated_time_seconds // 3600
             minutes = (estimated_time_seconds % 3600) // 60
             seconds = estimated_time_seconds % 60
-            
+
             print(f"\n{'='*60}")
             print(f"Verwendung der optimalen Größe: {current_chunk_size} Einträge/Chunk")
             print(f"Verbleibende Chunks: {chunks_remaining}")
@@ -374,34 +296,34 @@ def main():
             print(f"{'='*60}")
         else:
             print(f"\nTest mit {current_chunk_size} Einträgen/Chunk")
-        
+
         # Chunk extrahieren
         chunk = data[position:position + current_chunk_size]
-        
+
         try:
             # Chunk übersetzen
-            translated_chunk = translate_chunk_with_claude(chunk, chunk_number)
-            
+            translated_chunk = translate_chunk_with_openai(chunk, chunk_number)
+
             if translated_chunk:
                 # Nur noch nicht vorhandene Einträge hinzufügen
                 for item in translated_chunk:
                     if item['id'] not in translated_ids:
                         translated_data.append(item)
                         translated_ids.add(item['id'])
-                
+
                 position += len(chunk)
-                
+
                 # Optimale Chunk-Größe aktualisieren
                 if optimal_chunk_size is None or current_chunk_size < optimal_chunk_size:
                     optimal_chunk_size = current_chunk_size
                     print(f"  ✅ Optimale Größe {'bestätigt' if optimal_chunk_size == current_chunk_size else 'aktualisiert'}: {optimal_chunk_size} Einträge/Chunk")
-                
+
                 # Nach jedem Chunk speichern
                 with open(output_file, 'w', encoding='utf-8') as f:
                     json.dump(translated_data, f, indent=2, ensure_ascii=False)
-                
+
                 print(f"  Fortschritt: {len(translated_data)}/{len(data)} Einträge übersetzt")
-                
+
                 # Kurze Pause zwischen Chunks
                 if position < len(data):
                     time.sleep(1)
@@ -416,7 +338,7 @@ def main():
                     # Wenn sogar mit 1 Eintrag fehlgeschlagen: nächsten Eintrag versuchen
                     print("  Dieser Eintrag konnte nicht übersetzt werden, nächster Eintrag")
                     position += 1
-                    
+
         except subprocess.TimeoutExpired:
             # Timeout erreicht
             print(f"  ⚠️  Timeout bei {current_chunk_size} Einträgen")
@@ -433,20 +355,20 @@ def main():
                 # Timeout auch mit 1 Eintrag: nächsten Eintrag versuchen
                 print("  Timeout auch mit 1 Eintrag, nächster Eintrag")
                 position += 1
-    
+
     # Abschlussprüfung und Behandlung fehlender Einträge
     print(f"\n{'='*60}")
     print("Übersetzung abgeschlossen!")
     print(f"  Originale Einträge: {len(data)}")
     print(f"  Übersetzte Einträge: {len(translated_data)}")
-    
+
     if optimal_chunk_size:
         print(f"  Verwendete optimale Größe: {optimal_chunk_size} Einträge pro Chunk")
-    
+
     # Fehlende Einträge prüfen, bis alles übersetzt ist oder kein Fortschritt mehr möglich ist
     max_retry_rounds = 3
     retry_round = 0
-    
+
     while len(translated_data) < len(data) and retry_round < max_retry_rounds:
         retry_round += 1
         missing = len(data) - len(translated_data)
@@ -455,13 +377,13 @@ def main():
         print(f"  ⚠️  {missing} fehlende Einträge")
         print(f"  Übersetzte IDs: {len(translated_ids)}")
         print(f"  Einträge in translated_data: {len(translated_data)}")
-        
+
         # Fehlende Einträge präzise bestimmen
         missing_entries = [item for item in data if item['id'] not in translated_ids]
-        
+
         if missing_entries:
             print(f"\nNachholphase für {len(missing_entries)} Einträge...")
-            
+
             # Fehlende IDs für Debug anzeigen
             print("\nFehlende Einträge:")
             apostrophe_entries = []
@@ -473,14 +395,14 @@ def main():
                     print(f"  - {entry['id']}")
             if len(missing_entries) > 10:
                 print(f"  ... und {len(missing_entries) - 10} weitere")
-            
+
             # Einträge mit Apostrophen zuerst einzeln verarbeiten
             if apostrophe_entries:
                 print(f"\nSonderbehandlung für {len(apostrophe_entries)} Einträge mit Apostrophen...")
                 for entry in apostrophe_entries:
                     chunk_number += 1
                     print(f"\nEinzelübersetzung von: {entry['id']}")
-                    translated_single = translate_chunk_with_claude([entry], chunk_number, max_retries=5)
+                    translated_single = translate_chunk_with_openai([entry], chunk_number, max_retries=5)
                     if translated_single:
                         added = False
                         for item in translated_single:
@@ -541,7 +463,7 @@ Gib NUR das übersetzte JSON zurück, ohne Text davor oder danach."""
                                         print("    ✗ Manuelles JSON-Parsen fehlgeschlagen")
                         except:
                             print("    ✗ Manuelle Übersetzung fehlgeschlagen")
-            
+
             # Sichere Chunk-Größe für übrigen Nachhollauf
             safe_chunk_size = min(6, optimal_chunk_size or 6)
             retry_position = 0
@@ -554,7 +476,7 @@ Gib NUR das übersetzte JSON zurück, ohne Text davor oder danach."""
                 print(f"\nÜbersetzung des Nachhol-Chunks ({len(retry_chunk)} Einträge)...")
                 
                 # Mit mehr Wiederholungsversuchen übersetzen
-                translated_retry = translate_chunk_with_claude(retry_chunk, chunk_number, max_retries=5)
+                translated_retry = translate_chunk_with_openai(retry_chunk, chunk_number, max_retries=5)
                 
                 if translated_retry:
                     # Übersetzte Einträge hinzufügen

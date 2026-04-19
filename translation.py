@@ -38,6 +38,7 @@ DEFAULT_INPUT_FILE = "battlebase-data-en.json"
 DEFAULT_OUTPUT_FILE = "battlebase-data.json"
 STYLE_GUIDE_FILE = "GrundregelnBeispiel.txt"
 GLOSSARY_FILE = "terminology_glossary.json"
+REQUEST_PAUSE_SECONDS = 1.0
 
 
 def load_json_file(path: str) -> Any:
@@ -261,7 +262,7 @@ def translate_chunk_with_retry(
             print(f"  ✗ Fehler: {type(exc).__name__}: {exc}")
 
         if attempt < max_retries:
-            sleep_seconds = min(20, 2 ** attempt)
+            sleep_seconds = min(30, 5 * (2 ** (attempt - 1)))
             time.sleep(sleep_seconds)
 
     return []
@@ -316,7 +317,7 @@ def main() -> None:
                 json.dump(translated_data, f, indent=2, ensure_ascii=False)
 
             print(f"  Progress: {len(translated_data)}/{len(data)}")
-            time.sleep(0.5)
+            time.sleep(REQUEST_PAUSE_SECONDS)
             continue
 
         if current_chunk_size > 1:

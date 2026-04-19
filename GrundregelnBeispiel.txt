@@ -1,0 +1,358 @@
+Warhammer 40.000 wird in einer Reihe von Schlachtrunden gespielt. In jeder Schlachtrunde haben beide Spieler einen
+Zug. In jeder Schlachtrunde hat derselbe Spieler den ersten Zug – die gespielte Mission wird angeben, welcher
+Spieler das ist. Jeder Zug unterteilt sich in eine Reihe von Phasen, die in der folgenden Reihenfolge abgehandelt werden
+müssen.
+1. BEFEHLSPHASE
+Beide Spieler sammeln ihre strategischen Ressourcen.
+Dann prüfst du die Kampfbereitschaft deiner Einheiten.
+2. BEWEGUNGSPHASE
+Deine Einheiten bewegen sich über das Schlachtfeld,
+und Verstärkungen werfen sich in den Kampf.
+3. FERNKAMPFPHASE
+Deine Einheiten setzen ihre Fernkampfwaffen gegen den
+Feind ein.
+4. ANGRIFFSPHASE
+Deine Einheiten stürmen voran, um dem Feind Auge in Auge
+zu begegnen.
+5. NAHKAMPFPHASE
+Die Einheiten beider Spieler rücken nach und attackieren mit
+ihren Nahkampfwaffen.
+Nachdem der Zug eines Spielers beendet ist, beginnt der Zug des anderen Spielers.
+Haben beide Spieler einen Zug beendet, haben sie eine Schlachtrunde abgeschlossen
+und die nächste beginnt, und so weiter, bis die Schlacht endet.
+
+Deine Befehlsphase ist in zwei Schritte
+unterteilt. Im ersten Schritt erhalten
+beide Spieler 1 Befehlspunkt (BP)
+und du handelst etwaige andere Regeln
+in der Befehlsphase ab; im zweiten
+Schritt prüfst du, ob etwaige deiner
+Einheiten erschüttert sind.
+
+BEFEHLSPUNKTE ERHALTEN
+Abgesehen von den BP, die Spieler
+zu Beginn der Befehlsphase erhalten,
+kann jeder Spieler insgesamt unabhängig
+von der Quelle pro Schlachtrunde
+insgesamt nur 1 BP erhalten.
+
+Deine Bewegungsphase ist in zwei
+Schritte unterteilt. Zunächst kannst du
+deine Einheiten bewegen, dann kannst
+du Verstärkungen aufstellen.
+
+Wenn sich eine Einheit bewegt, kann sie eine normale Bewegung
+ausführen, vorrücken oder stationär bleiben.
+Einheiten in Nahkampfreichweite um ein feindliches Modell
+können sich nur zurückziehen oder stationär bleiben.
+
+Normale Bewegung: Modelle bewegen sich bis zu B Zoll.
+Sie können sich nicht in Nahkampfreichweite um feindliche Modelle
+bewegen.
+
+Vorrücken-Bewegung: Modelle bewegen sich bis zu B+W6 Zoll.
+Sie können sich nicht in Nahkampfreichweite um feindliche Modelle
+bewegen.
+Einheiten, die vorrücken, können im selben Zug nicht schießen
+und nicht angreifen.
+
+RÜCKZUGSBEWEGUNGEN
+Wenn sich eine Einheit zurückzieht, kann jedes Modell jener
+Einheit eine Rückzugsbewegung ausführen
+
+Fluchttests
+Anders als bei anderen Bewegungsarten können sich Modelle,
+die eine Rückzugsbewegung ausführen, über feindliche
+Modelle bewegen, als wären diese nicht da
+
+ÜBER GELÄNDE BEWEGEN
+Die Schlachtfelder von Warhammer 40.000 sind
+mit einer großen Bandbreite an Hindernissen, Gebäuden
+und Trümmern übersät, die als Geländestücke
+bezeichnet werden
+
+Wenn ein Modell fliegen kann, kann es sich beim Ausführen einer normalen
+Bewegung, einer Vorrücken-Bewegung oder einer Rückzugsbewegung
+über feindliche Modelle bewegen, als wären diese nicht da, und
+kann sich bei einer solchen Bewegung in Nahkampfreichweite um feindliche
+Modelle bewegen.
+
+2. VERSTÄRKUNGEN
+Manche Einheiten haben Regeln, die ihnen erlauben, die Schlacht
+in der Reserve zu beginnen, etwa Schocktruppen (Seite 39).
+
+Manche Modelle haben das Schlüsselwort Transporter.
+
+FERNKAMPFPHASE
+Verwende diese Abfolge, wenn eine
+Einheit schießt.
+1
+INFRAGE KOMMENDE EINHEIT
+WÄHLEN
+2
+ZIEL(E) WÄHLEN
+3
+FERNKAMPFATTACKEN
+AUSFÜHREN
+4
+VORGANG FÜR NÄCHSTE
+INFRAGE KOMMENDE EINHEIT
+WIEDERHOLEN
+
+ATTACKEN AUSFÜHREN
+Verfahre gemäß dieser Abfolge,
+wenn du Attacken eine nach der
+anderen ausführst.
+1
+TREFFERWURF
+2
+VERWUNDUNGSWURF
+3
+ATTACKE ZUWEISEN
+4
+SCHUTZWURF
+5
+SCHADEN ZUFÜGEN
+
+Trefferwurf (Fernkampfattacke): Ein Treffer wird erzielt, wenn
+das Wurfergebnis des W6 gleich der oder höher ist als die BF jener
+Attacke.
+Trefferwurf (Nahkampfattacke): Ein Treffer wird erzielt, wenn
+das Wurfergebnis des W6 gleich dem oder höher ist als das KG
+jener Attacke.
+Kritischer Treffer: Unmodifizierter Trefferwurf von 6. Immer erfolgreich.
+Ein unmodifizierter Trefferwurf von 1 misslingt immer.
+Ein Trefferwurf kann nie um mehr als -1 oder +1 modifiziert
+werden.
+
+Schutzwurf: Wirf einen W6 und modifiziere das Ergebnis um
+den DS der Attacke. Ist das Ergebnis niedriger als der Rüstungswurf
+des Modells, für das gewürfelt wird, misslingt der Schutzwurf
+und jenes Modell erleidet Schaden. Ansonsten ist der
+Schutzwurf erfolgreich und jene Attacke wird abgewehrt.
+Ein unmodifizierter Schutzwurf von 1 misslingt immer.
+Ein Schutzwurf kann niemals um mehr als um +1 verbessert
+werden.
+
+NAHKAMPFPHASE
+
+Die Nahkampfphase ist in zwei Schritte
+unterteilt. Zunächst kämpfen alle
+Einheiten mit der Fähigkeit Erstschlag,
+dann alle anderen infrage kommenden
+Einheiten.
+1
+ERSTSCHLAG
+Einheiten mit der Fähigkeit
+Erstschlag kämpfen
+2
+RESTLICHE NAHKÄMPFE
+Restliche infrage kommende
+Einheiten kämpfen
+
+Nachdem eine Einheit alle ihre Nahkampfattacken ausgeführt hat,
+ordnet sie sich neu.
+
+DATENBLÄTTER
+Jede Einheit hat ein Datenblatt, auf dem die Werte, Ausrüstung, Fähigkeiten und Schlüsselwörter ihrer Modelle
+aufgeführt sind. In dieser Sektion findest du einen Überblick über diese Elemente und eine Erklärung, wie sie
+im Spiel funktionieren.
+
+1 NAME DES
+DATENBLATTS
+Hier findest du den Namen der Einheit.
+2 PROFILE
+Hier findest du die folgenden Werte, die dir
+verraten, wie mächtig die Modelle der Einheit
+sind:
+Bewegung (B): Die Geschwindigkeit, mit der
+sich ein Modell über das Schlachtfeld bewegt.
+Hat ein Modell einen Bewegungswert von „-“,
+kann es sich gar nicht bewegen.
+Widerstand (W): Stellt dar, wie gut das Modell
+gegen physischen Schaden gefeit ist.
+Rüstungswurf (RW): Gibt Aufschluss über
+den Schutz, den die Rüstung eines Modells
+ihm bietet.
+Lebenspunkte (LP): Die Lebenspunkte bestimmen,
+wie viel Schaden ein Modell aushalten
+kann, bevor es seinen Verletzungen erliegt.
+Wird der Lebenspunktewert eines Modells auf
+0 reduziert, wird jenes Modell zerstört.
+Moralwert (MW): Gibt an, wie tapfer, entschlossen
+oder willensstark ein Modell ist. Je niedriger
+dieser Wert ist, umso besser ist der Moralwert
+eines Modells.
+Missionszielkontrolle (MK): Gibt an, wie effektiv
+ein Modell Kontrolle über ein Missionsziel auf
+dem Schlachtfeld ausüben kann.
+3 FÄHIGKEITEN
+Manche Einheiten haben besondere Fähigkeiten
+und Regeln, die im Lauf des Spiels zum
+Tragen kommen können. Diese reichen von
+Grundregeln, die viele Einheiten gemeinsam
+haben, über besondere psionische Fähigkeiten
+bis hin zu Rettungswürfen. Solche Fähigkeiten
+werden hier erläutert, ebenso wie etwaige
+Regeln, die greifen, wenn größere Modelle wie
+Fahrzeuge eine bestimmte Menge Schaden erlitten
+haben.
+Manche Fähigkeiten erhalten Modelle durch
+Ausrüstung, mit der sie ausgerüstet werden
+können. Solche Fähigkeiten heißen Ausrüstungsfähigkeiten
+und gelten nur, solange ein
+Modell der Einheit mit dem entsprechenden
+Ausrüstungsgegenstand ausgerüstet ist.
+4 WAFFEN
+Waffen werden mit den folgenden Profilwerten
+beschrieben:
+Reichweite (REICHW.): Wie weit die Waffe
+schießen kann. Waffen mit einer Reichweite
+von „Nahkampf “ sind Nahkampfwaffen und
+können nur im Kampf von Angesicht zu Angesicht
+verwendet werden. Alle anderen Waffen
+sind Fernkampfwaffen.
+Attacken (A): Dieser Wert verrät dir, wie viele
+Attacken bei jedem Einsatz jener Waffe ausgeführt
+werden.
+Kampfgeschick (KG): Dieser Wert stellt dar, wie
+gut der Träger im Umgang mit der entsprechenden
+Nahkampfwaffe ist.
+Ballistische Fertigkeit (BF): Dieser Wert gibt
+an, wie akkurat der Träger beim Schießen mit
+der entsprechenden Fernkampfwaffe ist.
+Stärke (S): Wie wahrscheinlich die Waffe einen
+Feind verwundet.
+Durchschlag (DS): Dies stellt dar, wie gut die
+Waffe darin ist, die Verteidigung des Ziels
+zu durchdringen.
+Schadenswert (SW): Die Höhe des Schadens,
+der durch eine erfolgreiche Verwundung verursacht
+wird.
+5 SCHLÜSSELWÖRTER
+Auf Datenblättern findest du eine Reihe von
+Schlüsselwörtern, die sich in Fraktionsschlüsselwörter
+und andere Schlüsselwörter aufteilen.
+Erstere werden benutzt, wenn du entscheidest,
+welche Modelle du in deine Armee
+aufnimmst, aber abgesehen davon funktionieren
+beide Arten von Schlüsselwörtern gleich.
+6
+EINHEITENZUSAMMENSTELLUNG
+UND ANDERE
+REGELN
+In dieser Sektion findest du Anzahl und Typ
+der Modelle einer Einheit und ihre Standardbewaffnung
+und -ausrüstung. Zudem können
+hier andere Regeln zu finden sein, etwa welchen
+Einheiten sich eine Einheit mit der Fähigkeit
+Anführer anschließen kann oder Einschränkungen
+bezüglich der Passagiere, die an
+Bord von Transporter-Modellen transportiert
+werden können.
+7 AUSRÜSTUNGSOPTIONEN
+Auf manchen Datenblättern findest du Listen
+mit Ausrüstungsoptionen. Wenn du eine
+solche Einheit in deine Armee aufnimmst,
+kannst du diese Optionen wahrnehmen, um
+Waffen und Ausrüstung der Modelle der Einheit
+zu wechseln. Die Reihenfolge, in der du
+die Optionen wahrnimmst, spielt keine Rolle,
+aber du kannst jede Option nicht mehr als einmal
+wahrnehmen.
+MORALWERTTESTS
+Wenn eine Regel dich anweist, einen
+Moralwerttest für eine Einheit auszuführen,
+wirfst du 2W6: Ist das Ergebnis
+gleich dem oder höher als der beste
+Moralwert jener Einheit, ist der Test
+bestanden. Ansonsten misslingt er.
+ZUFÄLLIGE PROFILWERTE
+Bei manchen Profilwerten findest du
+anstelle einer Zahl einen zufälligen
+Wert. Der Bewegungswert eines Modells
+könnte beispielsweise 2W6 betragen
+oder der Attackenwert einer
+Waffe W6. Wenn eine Einheit mit zufälligem
+Bewegungswert zum Bewegen
+gewählt wird, bestimme den Bewegungswert
+für die gesamte Einheit,
+indem du die angegebene Anzahl
+Würfel wirfst. Bei allen anderen Werten
+würfelst du jedes Mal, wenn sie benötigt
+werden, für jedes Modell beziehungsweise
+jede Waffe einzeln, um sie
+zu bestimmen.
+AURAFÄHIGKEITEN
+Manche Fähigkeiten betreffen mehrere
+Modelle oder Einheiten in einer
+festgelegten Reichweite. Sie werden als
+Aurafähigkeiten bezeichnet und sind
+durch den Begriff „Aura“ hervorgehoben.
+Ein Modell mit Aurafähigkeit befindet
+sich immer in Reichweite seiner
+eigenen Aurafähigkeit. Eine Einheit
+kann von mehreren Aurafähigkeiten
+gleichzeitig betroffen sein, aber wenn
+eine Einheit mehr als einmal in Reichweite
+der gleichen Aurafähigkeit ist,
+ist sie von jener Aurafähigkeit nur einmal
+betroffen.
+PSIONISCHE WAFFEN UND
+FÄHIGKEITEN
+Manche Waffen und Fähigkeiten können
+nur von Psionikern eingesetzt
+werden. Solche Waffen und Fähigkeiten
+sind durch das Wort „psionisch“
+gekennzeichnet. Wenn eine psionische
+Waffe oder eine psionische Fähigkeit
+einer Einheit Verwundungen zufügt,
+gilt jede solche Verwundung als durch
+eine psionische Attacke verursacht.
+
+AUFSTELLUNGSFÄHIGKEITEN
+Manche Fähigkeiten werden bei der Aufstellung vor der Schlacht benutzt oder wenn du eine Einheit aufstellst –
+ob auf dem Schlachtfeld oder in der Reserve. Sie werden als Aufstellungsfähigkeiten bezeichnet. Unten findest
+du einige weitverbreitete Beispiele für solche Fähigkeiten.
+
+SCHOCKTRUPPEN
+KUNDSCHAFTER
+INFILTRATOREN
+ANFÜHRER
+
+GEFECHTSOPTIONEN
+Befehlspunkte können im Schlachtverlauf für den Einsatz von Gefechtsoptionen ausgegeben werden. Die hier
+aufgeführten Basisgefechtsoptionen können von allen Spielern eingesetzt werden. Weitere Gefechtsoptionen
+können in Codices und anderen Publikationen gefunden werden
+
+KATEGORIEN VON GEFECHTSOPTIONEN
+Jede Gefechtsoption gehört einer der vier unten aufgeführten
+Kategorien an. Es gibt einige Regeln (vor allem in Kreuzzugsspielen),
+die mit Gefechtsoptionen bestimmter Kategorien interagieren.
+KAMPFTAKTIK: Diese Gefechtsoptionen verbessern die Effektivität
+einer Einheit, indem sie ihre offensiven oder defensiven Fähigkeiten
+in einem kritischen Augenblick stärken.
+HELDENTAT: Diese Gefechtsoptionen werden von einzelnen Modellen
+oder Einheiten eingesetzt, um außergewöhnliche Taten
+zu vollbringen.
+STRATEGISCHE LIST: Diese Gefechtsoptionen erlauben Einheiten
+neue strategische Einsichten und generieren so ein kleines,
+aber wertvolles Zeitfenster für ihr Handeln.
+AUSRÜSTUNG: Diese Gefechtsoptionen stellen die Effekte beim
+Einsatz spezialisierter Ausrüstung im Gefecht dar.
+
+ARMEEZUSAMMENSTELLUNG
+Um ein Warhammer-40.000-Spiel zu spielen, musst du zunächst anhand dieser Abfolge deine Armee zusammenstellen.
+SCHLACHTGRÖSSE WÄHLEN
+ARMEEN ZUSAMMENSTELLEN
+MISSIONSZIELE LESEN
+SCHLACHTFELD AUFBAUEN
+ANGREIFER UND VERTEIDIGER BESTIMMEN
+SCHLACHTFORMATION FESTLEGEN
+ARMEEN AUFSTELLEN
+ERSTEN ZUG BESTIMMEN
+FÄHIGKEITEN VOR SCHLACHTBEGINN
+BEGINN DER SCHLACHT
+
+Missionszielmarker repräsentierten Objekte von taktischem oder strategischem
+Wert

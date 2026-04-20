@@ -271,7 +271,7 @@ def merge_chunk_files(output_file, max_chunk_number=None):
     print(f"  ♻️  Ausgabe aus {len(chunk_files)} Chunk-Dateien zusammengeführt")
     return merged_data
 
-def translate_chunk_with_openai(chunk, chunk_number, max_retries=3):
+def translate_chunk_with_openai(chunk, chunk_number, max_retries=2):
     """Übersetzt einen Chunk mit der OpenAI API."""
     print(f"\nÜbersetzung von Chunk {chunk_number} ({len(chunk)} Einträge)...")
 

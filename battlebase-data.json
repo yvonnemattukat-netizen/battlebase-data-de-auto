@@ -1,7 +1,7 @@
 [
   {
     "id": "setup-rule-muster-armies",
-    "body": "Spieler stellen zuerst ihre Armeen auf, wie in den Grundregeln beschrieben. Denken Sie daran, dass alle Details der Armee eines Spielers auf seiner Armeeliste verzeichnet sein müssen."
+    "body": "Spieler stellen zuerst ihre Armeen zusammen, wie in den Grundregeln beschrieben. Denken Sie daran, dass alle Details der Armee eines Spielers auf seiner Armeeliste verzeichnet sein müssen."
   },
   {
     "id": "setup-rule-determine-mission",
@@ -17,7 +17,7 @@
   },
   {
     "id": "setup-rule-create-the-battlefield",
-    "body": "Die Spieler erstellen jetzt das Schlachtfeld und stellen Geländemerkmale auf.\n\nMissionen werden auf rechteckigen Schlachtfeldern gespielt, deren Abmessungen etwa 44\" x 60\" betragen. Dies kann erreicht werden, indem vier Kampfzonentafeln flach nebeneinander auf einer Oberfläche platziert werden.\n\nSofern nicht anders angegeben, sollten Spieler beim Aufstellen von Geländemerkmale die Richtlinien aus den Grundregeln verwenden. Die Regeln für Geländemerkmale aus den Grundregeln müssen verwendet werden. Auf dem Gelände dürfen sich keine unpassierbaren Bereiche (wie z.B. Mauern einer Ruine) innerhalb von 1\" zu Zielmarkern befinden."
+    "body": "Die Spieler bauen jetzt das Schlachtfeld auf und stellen Gelände auf.\n\nMissionen werden auf rechteckigen Schlachtfeldern gespielt, deren Abmessungen etwa 44\" x 60\" betragen. Dies kann erreicht werden, indem vier Kampfzonentafeln flach nebeneinander auf einer Oberfläche platziert werden.\n\nSofern nicht anders angegeben, sollten Spieler beim Aufstellen von Gelände die Richtlinien aus den Grundregeln verwenden. Die Regeln für Gelände(Ruinen,Wald,etc.) aus den Grundregeln müssen verwendet werden. Auf dem Gelände dürfen sich keine unpassierbaren Bereiche (wie z.B. Mauern einer Ruine) innerhalb von 1\" zu Zielmarkern befinden."
   },
   {
     "id": "setup-rule-determine-attacker-and-defender",
@@ -25,11 +25,11 @@
   },
   {
     "id": "setup-rule-select-secondary-missions",
-    "body": "Es gibt zwei Sekundärmissions-Decks (eins für den Angreifer, eins für den Verteidiger), sodass Spieler die gleichen Sekundärmissionen ziehen können. Diese beschreiben Ziele, die Spieler erreichen können, um SP zu erzielen. Jede Sekundärmissions-Karte gibt an, wann und wie sie erreicht wird, sowie wie viele SP der Spieler für deren Erfüllung erhält.\n\nJeder Spieler muss nun wählen, ob er im Kampf feste oder taktische Missionen verwenden möchte. Dazu nimmt jeder Spieler sein jeweiliges Sekundärmissions-Deck. Soll ein Spieler feste Missionen verwenden, so wählt er geheim zwei Karten mit festen Missionen (gekennzeichnet durch das Symbol für feste Missionen) aus seinem Sekundärmissions-Deck und legt diese verdeckt auf das Schlachtfeld. Möchte ein Spieler stattdessen taktische Missionen verwenden, wählt er beliebige zwei Sekundärmissions-Karten aus seinem Deck, die nicht das Symbol für feste Missionen haben und legt diese verdeckt auf das Schlachtfeld. Haben beide Spieler dies getan, werden die Auswahlmöglichkeiten aufgedeckt.\n\nWenn ein Spieler zwei Karten mit festen Missionen auswählt, sind diese Sekundärmissionen in jeder Kampfrunde aktiv, und können in jeder Kampfrunde erreicht und erzielt werden. Der Rest ihres Sekundärmissions-Decks wird in der kommenden Schlacht nicht verwendet und kann beiseite gelegt werden.\n\nAusgewählte feste Missionskarten können aus keinem Grund verworfen werden.\n\nFalls ein Spieler nicht zwei feste Missionskarten gewählt hat, wird er im kommenden Kampf taktische Missionen verwenden und sollte jetzt sein Sekundärmissions-Deck erneut mischen. Zu Beginn jeder Kommandophase dieses Spielers muss dieser Spieler ermitteln, welche Sekundärmissionskarten für ihn aktiv sind, indem er Karten aus seinem Sekundärmissions-Deck zieht. Wenn er weniger als zwei aktive Sekundärmissionskarten hat, zieht er von seinem Sekundärmissions-Deck, bis er zwei Sekundärmissionskarten hat. Jener Spieler hat Zugriff auf die Taktik Neuordnung (siehe Rückseite), und kann CP dafür ausgeben, diese zu nutzen, nachdem er seine Sekundärmissionskarten gezogen hat, wenn er dies wünscht. Wenn das Sekundärmissions-Deck eines Spielers aufgebraucht ist, kann er im Kampf keine zusätzlichen Sekundärmissionen generieren. Jedes Mal, wenn ein Spieler eine Sekundärmission erfüllt, wird nach dem Erzielen der auf dieser Karte beschriebenen SP, diese Sekundärmission verworfen."
+    "body": "Es gibt zwei Sekundärmissions-Decks (eins für den Angreifer, eins für den Verteidiger), sodass Spieler die gleichen Sekundärmissionen ziehen können. Diese beschreiben Ziele, die Spieler erreichen können, um SP zu erzielen. Jede Sekundärmissions-Karte gibt an, wann und wie sie erreicht wird, sowie wie viele SP der Spieler für deren Erfüllung erhält.\n\nJeder Spieler muss nun wählen, ob er im Kampf feste oder taktische Missionen verwenden möchte. Dazu nimmt jeder Spieler sein jeweiliges Sekundärmissions-Deck. Sollte ein Spieler feste Missionen verwenden, so wählt er geheim zwei Karten mit festen Missionen (gekennzeichnet durch das Symbol für feste Missionen) aus seinem Sekundärmissions-Deck und legt diese verdeckt auf das Schlachtfeld. Möchte ein Spieler stattdessen taktische Missionen verwenden, wählt er beliebige zwei Sekundärmissions-Karten aus seinem Deck, die nicht das Symbol für feste Missionen haben und legt diese verdeckt auf das Schlachtfeld. Haben beide Spieler dies getan, werden die Auswahlmöglichkeiten aufgedeckt.\n\nWenn ein Spieler zwei Karten mit festen Missionen auswählt, sind diese Sekundärmissionen in jeder Kampfrunde aktiv, und können in jeder Kampfrunde erreicht und erzielt werden. Der Rest ihres Sekundärmissions-Decks wird in der kommenden Schlacht nicht verwendet und kann beiseite gelegt werden.\n\nAusgewählte feste Missionskarten können aus keinem Grund verworfen werden.\n\nFalls ein Spieler nicht zwei feste Missionskarten gewählt hat, wird er im kommenden Kampf taktische Missionen verwenden und sollte jetzt sein Sekundärmissions-Deck erneut mischen. Zu Beginn jeder Kommandophase dieses Spielers muss dieser Spieler ermitteln, welche Sekundärmissionskarten für ihn aktiv sind, indem er Karten aus seinem Sekundärmissions-Deck zieht. Wenn er weniger als zwei aktive Sekundärmissionskarten hat, zieht er von seinem Sekundärmissions-Deck, bis er zwei Sekundärmissionskarten hat. Jener Spieler hat Zugriff auf die Taktik Neuordnung (siehe Rückseite), und kann CP dafür ausgeben, diese zu nutzen, nachdem er seine Sekundärmissionskarten gezogen hat, wenn er dies wünscht. Wenn das Sekundärmissions-Deck eines Spielers aufgebraucht ist, kann er im Kampf keine zusätzlichen Sekundärmissionen generieren. Jedes Mal, wenn ein Spieler eine Sekundärmission erfüllt, wird nach dem Erzielen der auf dieser Karte beschriebenen SP, diese Sekundärmission auf den Ablegestapel gelegt."
   },
   {
     "id": "setup-rule-declare-battle-formations",
-    "body": "In der unten angegebenen Reihenfolge, notieren beide Spieler heimlich\n\n• Welche ihrer Anführereinheiten den Kampf angebunden beginnen (sie müssen angeben, welche Anführereinheit an welche Leibwacheinheit angebunden ist)\n• Welche ihrer Einheiten den Kampf in TRANSPORT-Modellen beginnen (sie müssen angeben, welche Einheiten in welchen Modellen sind)\n• Welche ihrer Einheiten den Kampf in den Reserven beginnen (einschließlich der strategischen Reserven). Nicht mehr als die Hälfte der Einheiten in einer Armee eines Spielers darf den Kampf in den Reserven beginnen, und die Gesamtpunktzahl dieser Einheiten darf nicht mehr als die Hälfte der Gesamtpunktzahl ihrer Armee betragen. Einheiten, die in einem TRANSPORT untergebracht sind, der in den Reserven eingesetzt wird, gelten auch als in den Reserven eingesetzt für diese Begrenzungen.\n\nWenn beide Spieler dies getan haben, erklären sie ihre Auswahl ihrem Gegner.\n\nReserven-Einheiten können nicht während der ersten Kampfrunde eintreffen und alle strategischen Reserven oder Reserveneinheiten, die bis zum Ende der dritten Kampfrunde nicht auf dem Schlachtfeld eingetroffen sind, gelten als vernichtet, ebenso wie alle in ihnen befindlichen Einheiten (dies gilt nicht für Einheiten, die nach Beginn der ersten Kampfrunde in die strategischen Reserven versetzt werden)"
+    "body": "In der unten angegebenen Reihenfolge, notieren beide Spieler heimlich\n\n• Welche ihrer Anführereinheiten den Kampf angebunden beginnen (sie müssen angeben, welche Anführereinheit an welche Leibwacheinheit angebunden ist)\n• Welche ihrer Einheiten den Kampf in TRANSPORT-Modellen beginnen (sie müssen angeben, welche Einheiten in welchen Modellen sind)\n• Welche ihrer Einheiten den Kampf in den Reserven beginnen (einschließlich der strategischen Reserven). Nicht mehr als die Hälfte der Einheiten in einer Armee eines Spielers darf den Kampf in den Reserven beginnen, und die Gesamtpunktzahl dieser Einheiten darf nicht mehr als die Hälfte der Gesamtpunktzahl ihrer Armee betragen. Einheiten, die in einem TRANSPORTER untergebracht sind, der in den Reserven eingesetzt wird, gelten auch als in den Reserven eingesetzt für diese Begrenzungen.\n\nWenn beide Spieler dies getan haben, erklären sie ihre Auswahl ihrem Gegner.\n\nReserven-Einheiten können nicht während der ersten Kampfrunde eintreffen und alle strategischen Reserven oder Reserveneinheiten, die bis zum Ende der dritten Kampfrunde nicht auf dem Schlachtfeld eingetroffen sind, gelten als vernichtet, ebenso wie alle in ihnen befindlichen Einheiten (dies gilt nicht für Einheiten, die nach Beginn der ersten Kampfrunde in die strategischen Reserven versetzt werden)"
   },
   {
     "id": "setup-rule-deploy-armies",
@@ -832,10 +832,10 @@
   },
   {
     "id": "stratagem-adepta-sororitas-carry-forth-the-faithful",
-    "lore": "Versammelt in einem Transportmittel, rezitieren die Schlachtschwestern dröhnende Gebete, so dass das ganze Fahrzeug von frommer Wut widerhallt.",
+    "lore": "Versammelt in einem Transporter, rezitieren die Schlachtschwestern dröhnende Gebete, so dass das ganze Fahrzeug von frommer Wut widerhallt.",
     "whenRules": "Deine Bewegungsphase, kurz bevor ein Adepta Sororitas Transportmodell aus deiner Armee vorrückt.",
     "targetRules": "Dieses Adepta Sororitas Transportmodell.",
-    "effectRules": "Bis zum Ende des Zuges kannst du Vorrückungswürfe für deinen Transport neu würfeln, und Einheiten können aus dem Transport aussteigen, obwohl er vorgegangen ist. Einheiten, die dies tun, zählen, als hätten sie eine normale Bewegung gemacht, und können in diesem Zug keine Anklage erheben.",
+    "effectRules": "Bis zum Ende des Zuges kannst du Vorrückungswürfe für deinen Transporter neu würfeln, und Einheiten können aus dem Transporter aussteigen, obwohl er vorgegangen ist. Einheiten, die dies tun, zählen, als hätten sie eine normale Bewegung gemacht, und können in diesem Zug keine Anklage erheben.",
     "restrictionRules": null
   },
   {
@@ -1476,7 +1476,7 @@
     "id": "stratagem-adeptus-mechanicus-auto-oracular-retrieval",
     "lore": "Mit einer Flut von Zielerfassungsdaten aus der Kriegsmaschine, während ihre Luken zuklappen, strömen die Krieger bereits mit ihren Waffen unfehlbar auf den Feind gerichtet heraus.",
     "whenRules": "Deine Schießphase.",
-    "targetRules": "Eine Einheit der Adeptus Mechanicus aus deiner Armee, die in diesem Zug aus einem Transport ausgestiegen ist.",
+    "targetRules": "Eine Einheit der Adeptus Mechanicus aus deiner Armee, die in diesem Zug aus einem Transporter ausgestiegen ist.",
     "effectRules": "Bis zum Ende der Phase erhöht sich bei jedem Modell in deiner Einheit der Wundwurf um 1 bei einem Fernkampfangriff, der eine feindliche Einheit innerhalb der Reichweite deines Zielmarker zur Übernahme zum Ziel hat.",
     "restrictionRules": null
   },
@@ -1492,9 +1492,9 @@
     "id": "stratagem-adeptus-mechanicus-reactive-safeguard",
     "lore": "Heilige Daten müssen um jeden Preis gehortet werden und dick gepanzerte Kriegsmaschinen bieten schnelle und sichere Lagerstätten.",
     "whenRules": "Angriffsphase deines Gegners, gleich nachdem eine feindliche Einheit einen Angriff angekündigt hat.",
-    "targetRules": "Eine Infanterieeinheit der Adeptus Mechanicus aus deiner Armee innerhalb der Reichweite deines Zielmarker zur Übernahme, die als Ziel dieses Angriffs ausgewählt wurde und ein befreundeter Transport der Adeptus Mechanicus.",
-    "effectRules": "Deine Einheit kann in diesem Transport einsteigen.",
-    "restrictionRules": "Jedes Modell in deiner Einheit muss sich innerhalb von 3\" zu diesem Transport befinden und es muss genügend Transportkapazität vorhanden sein, um die gesamte Einheit aufzunehmen."
+    "targetRules": "Eine Infanterieeinheit der Adeptus Mechanicus aus deiner Armee innerhalb der Reichweite deines Zielmarker zur Übernahme, die als Ziel dieses Angriffs ausgewählt wurde und ein befreundeter Transporter der Adeptus Mechanicus.",
+    "effectRules": "Deine Einheit kann in diesen Transporter einsteigen.",
+    "restrictionRules": "Jedes Modell in deiner Einheit muss sich innerhalb von 3\" zu diesem Transporter befinden und es muss genügend Transportkapazität vorhanden sein, um die gesamte Einheit aufzunehmen."
   },
   {
     "id": "stratagem-adeptus-mechanicus-bionic-endurance",
@@ -1842,7 +1842,7 @@
   {
     "id": "stratagem-aeldari-skyborne-sanctuary",
     "whenRules": "Ende der Kampfphase.",
-    "targetRules": "Eine ASURYANI-Einheit aus deiner Armee und ein freundlicher TRANSPORT, in den sie einsteigen könnte.",
+    "targetRules": "Eine ASURYANI-Einheit aus deiner Armee und ein freundlicher TRANSPORTER, in den sie einsteigen könnte.",
     "effectRules": "Wenn deine ASURYANI-Einheit nicht innerhalb der Engagementreichweite von einer oder mehreren feindlichen Einheiten ist und vollständig innerhalb von 6\" zu diesem TRANSPORT steht, kann sie in diesen einsteigen.",
     "restrictionRules": null
   },
@@ -1926,8 +1926,8 @@
   {
     "id": "stratagem-aeldari-swift-deployment",
     "whenRules": "Deine Bewegungsphase.",
-    "targetRules": "Eine AELDARI TRANSPORT Einheit aus deiner Armee.",
-    "effectRules": "Bis zum Ende der Phase können Einheiten von deinem TRANSPORT absetzen, nachdem er vorgerückt ist. Einheiten, die dies tun, gelten als eine normale Bewegung in dieser Phase gemacht zu haben und können in derselben Runde keine Charge ankündigen, können aber sonst normal handeln.",
+    "targetRules": "Eine AELDARI TRANSPORTER Einheit aus deiner Armee.",
+    "effectRules": "Bis zum Ende der Phase können Einheiten aus deinem TRANSPORTER aussteigen, nachdem er vorgerückt ist. Einheiten, die dies tun, gelten als eine normale Bewegung in dieser Phase gemacht zu haben und können in derselben Runde keine Charge ankündigen, können aber sonst normal handeln.",
     "restrictionRules": null
   },
   {
@@ -1941,7 +1941,7 @@
     "id": "stratagem-aeldari-cloudstrike",
     "whenRules": "Beginn der Verstärkungsschritte deiner Bewegungsphase.",
     "targetRules": "Eine AELDARI VEHICLE Einheit aus deiner Armee, die fliegen kann, und sich in strategischen Reserven befindet.",
-    "effectRules": "Bis zum Ende der Phase hat deine Einheit die „Deep Strike“-Fähigkeit. Wenn deine Einheit mit der „Deep Strike“-Fähigkeit auf dem Schlachtfeld aufgestellt wird, kann sie überall auf dem Schlachtfeld aufgestellt werden, das mehr als 6\" horizontal von allen feindlichen Einheiten entfernt ist, aber wenn sie das tut, ist sie bis zum Ende der Runde nicht berechtigt, eine Charge anzukündigen. Außerdem muss jede Einheit, die in dieser Runde von deinem TRANSPORT absetzt, mehr als 6\" horizontal von allen feindlichen Einheiten entfernt aufgestellt werden und ist bis zum Ende der Runde nicht berechtigt, eine Charge anzukündigen.&#x20;",
+    "effectRules": "Bis zum Ende der Phase hat deine Einheit die „Deep Strike“-Fähigkeit. Wenn deine Einheit mit der „Deep Strike“-Fähigkeit auf dem Schlachtfeld aufgestellt wird, kann sie überall auf dem Schlachtfeld aufgestellt werden, das mehr als 6\" horizontal von allen feindlichen Einheiten entfernt ist, aber wenn sie das tut, ist sie bis zum Ende der Runde nicht berechtigt, eine Charge anzukündigen. Außerdem muss jede Einheit, die in dieser Runde aus deinem TRANSPORTER ausgestiegen, mehr als 6\" horizontal von allen feindlichen Einheiten entfernt aufgestellt werden und ist bis zum Ende der Runde nicht berechtigt, eine Charge anzukündigen.&#x20;",
     "restrictionRules": null
   },
   {
@@ -2185,8 +2185,8 @@
   {
     "id": "stratagem-aeldari-skyborne-sanctuary",
     "whenRules": "Ende der Kampfphase.",
-    "targetRules": "Eine ASURYANI Einheit deiner Armee und ein befreundetes TRANSPORTFÄHIGES, in das sie einsteigen kann.",
-    "effectRules": "Wenn deine ASURYANI Einheit nicht in Engagementsreichweite von einer oder mehr feindlichen Einheiten ist und sich vollständig innerhalb von 6\" von diesem TRANSPORTFÄHIGEN befindet, kann sie in ihm einsteigen.",
+    "targetRules": "Eine ASURYANI Einheit deiner Armee und ein befreundetes TRANSPORTFAHRZEUG, in das sie einsteigen kann.",
+    "effectRules": "Wenn deine ASURYANI Einheit nicht in Nahkampfreichweite von einer oder mehr feindlichen Einheiten ist und sich vollständig innerhalb von 6\" von diesem TRANSPORTER befindet, kann sie in ihm einsteigen.",
     "restrictionRules": null
   },
   {
@@ -2239,7 +2239,7 @@
     "lore": "Die Aeldari sind Meister der Schlag-und-Flucht-Taktiken, sie greifen ein Ziel mit einem Schwall von Schüssen an, bevor sie sich schnell in Deckung oder aus dem Sichtfeld bewegen",
     "whenRules": "Ende deiner Schussphase.",
     "targetRules": "Eine Aeldari-Einheit aus deiner Armee.",
-    "effectRules": "Deine Einheit kann sich normal bewegen. Sie kann nicht am Ende dieser Bewegung in ein Transportmittel einsteigen.",
+    "effectRules": "Deine Einheit kann sich normal bewegen. Sie kann nicht am Ende dieser Bewegung in ein Transportfahrzeug einsteigen.",
     "restrictionRules": "Du kannst keine Flugzeug-Einheit oder eine Einheit auswählen, die sich in der Engagement-Reichweite einer oder mehrerer feindlicher Einheiten befindet und bis zum Ende des Zuges ist die von dir ausgewählte Einheit nicht berechtigt, eine Ladung zu deklarieren."
   },
   {
@@ -2255,7 +2255,7 @@
     "lore": "Die Aeldari sind Meister der Tarnung und nutzen Holo-Emitter und psychische Phantasmata, um feindliche Späher zu täuschen.",
     "whenRules": "Ende der Bewegungsphase deines Gegners.",
     "targetRules": "Eine Aeldari-Infanterie-Einheit aus deiner Armee.",
-    "effectRules": "Deine Einheit kann sich normal um bis zu D6\" bewegen. Sie kann nicht am Ende dieser Bewegung in ein Transportmittel einsteigen.",
+    "effectRules": "Deine Einheit kann sich normal um bis zu D6\" bewegen. Sie kann nicht am Ende dieser Bewegung in ein Transportfahrzeug einsteigen.",
     "restrictionRules": "Du kannst keine Einheit auswählen, die sich in der Engagement-Reichweite einer oder mehrerer feindlicher Einheiten befindet und bis zum Ende des Zuges kannst du diese Einheit nicht mit dem Stratagem Heroische Intervention ins Visier nehmen."
   },
   {
@@ -9108,7 +9108,7 @@
     "lore": "Reguläre Feuerkastenkräfte, die als Teil von Hilfskadern eingesetzt werden, sind gut in schnellen Umlagerungen und kämpfenden Rückzügen ausgebildet, um die Präsenz ihrer außerirdischen Kameraden besser ausnutzen zu können oder ihnen Unterstützung zu bieten.",
     "whenRules": "Ende der Nahkampfphase.",
     "targetRules": "Eine T'au-Empire-Einheit aus deiner Armee, die in dieser Phase berechtigt war zu kämpfen.",
-    "effectRules": "Wenn deine Einheit nicht innerhalb der Engagement-Reichweite einer oder mehrerer feindlicher Einheiten ist, kann sie eine normale Bewegung von bis zu 6\" machen. Andernfalls kann deine Einheit eine Rückzugsbewegung durchführen. Sie kann am Ende dieser Bewegung nicht in ein Transportmittel einsteigen, wenn sie in diesem Zug aus einem Transportmittel ausgestiegen ist.",
+    "effectRules": "Wenn deine Einheit nicht innerhalb der Engagement-Reichweite einer oder mehrerer feindlicher Einheiten ist, kann sie eine normale Bewegung von bis zu 6\" machen. Andernfalls kann deine Einheit eine Rückzugsbewegung durchführen. Sie kann am Ende dieser Bewegung nicht in ein Transportfahrzeug einsteigen, wenn sie in diesem Zug aus einem Transporter ausgestiegen ist.",
     "restrictionRules": null
   },
   {

@@ -162,7 +162,7 @@
   },
   {
     "id": "mission-chapter-approved-2025-26-the-ritual",
-    "lore": "Bittere Feinde treffen in einem Wettlauf zusammen, um ein Ritual zu vollenden, um das Schlachtfeld zu heiligen oder zu verderben.",
+    "lore": "Verbitterte Feinde treffen in einem Wettlauf zusammen, um ein Ritual zu vollenden, um das Schlachtfeld zu heiligen oder zu verderben.",
     "body": "DAS RITUAL (AKT)\nBEGINNT: Deine Schussphase.\nEINHEITEN: Eine Einheit aus deiner Armee.\nENDE: Ende deines Zuges.\nWENN ERFOLGREICH: Stelle einen Zielpunkt irgendwo auf dem Schlachtfeld vollständig in Niemandsland und innerhalb von 1\" von deiner Einheit auf, vorausgesetzt, er kann genau 12\" von einem anderen Zielpunkt innerhalb von Niemandsland und nicht innerhalb von 6\" von einem anderen Zielpunkt aufgestellt werden.\n\nAB DER ZWEITEN KAMPFRUNDE\nWANN: Ende der Befehlsphase (oder am Ende deines Zuges, wenn es die fünfte Kampfrunde ist und du als Zweiter spielst).\nDer Spieler, der an der Reihe ist, erhält 5SP für jeden Zielpunkt in Niemandsland, den er kontrolliert (bis zu 15SP pro Runde)."
   },
   {
@@ -7704,7 +7704,7 @@
     "lore": "Blood Axes schämen sich nicht, aus einem Kampf zu fliehen, besonders wenn der Boss will, dass jemand anderes geschlagen wird.",
     "whenRules": "Deine Bewegungsphase, direkt nachdem eine Orks Einheit aus deiner Armee zurückgezogen ist.",
     "targetRules": "Diese Orks Einheit.",
-    "effectRules": "Bis zum Ende des Zuges ist deine Einheit berechtigt zu schießen und eine Gebühr in einem Zug zu erklären, in dem sie sich zurückgezogen hat.",
+    "effectRules": "Bis zum Ende des Zuges ist deine Einheit berechtigt zu schießen und eine Angriffsbewegung in einem Zug zu erklären, in dem sie sich zurückgezogen hat.",
     "restrictionRules": null
   },
   {

@@ -5,11 +5,11 @@
   },
   {
     "id": "setup-rule-determine-mission",
-    "body": "Spieler teilen die Karten in ihre jeweiligen Decks auf: Einsatzdeck: Missionsregel-Deck; Primärmissions-Deck; Sekundärmissions-Decks (eins für den Angreifer, eins für den Verteidiger); Gambit-Decks (eins für den Angreifer, eins für den Verteidiger). Die Sekundärmissions- und Gambit-Decks werden beiseite gelegt (die Spieler erhalten diese später).\n\nSpieler bestimmen ihre Mission, indem sie das Einsatz-, Missionsregel- und Primärmissions-Deck mischen und zufällig eine Karte ziehen."
+    "body": "Spieler teilen die Karten in ihre jeweiligen Decks auf: Einsatzdeck: Missionsregel-Deck; Primärmissions-Deck; Sekundärmissions-Decks (eins für den Angreifer, eins für den Verteidiger); Herausforderungs-Decks (eins für den Angreifer, eins für den Verteidiger). Die Sekundärmissions- und Herausforderungs-Decks werden beiseite gelegt (die Spieler erhalten diese später).\n\nSpieler bestimmen ihre Mission, indem sie das Einsatz-, Missionsregel- und Primärmissions-Deck mischen und zufällig eine Karte ziehen."
   },
   {
     "id": "setup-rule-read-mission",
-    "body": "Als nächstes lesen die Spieler die gezogenen Primärmissions- und Missionsregel-Karten.\n\nDie Primärmissions-Karte gibt an, wie und wann Spieler Siegpunkte (SP) erzielen. Spieler können auch SP erhalten, indem sie Sekundärmissionen und Gambits erfüllen, die später beschrieben werden. Auf einigen Primärmissions-Karten befinden sich auch zusätzliche Regeln, die für den Kampf gelten.\n\nDie Missionsregel-Karte nennt alle Sonderregeln, die für die Dauer des Kampfes gelten. Spieler sollten sich damit vertraut machen, bevor es weitergeht."
+    "body": "Als nächstes lesen die Spieler die gezogenen Primärmissions- und Missionsregel-Karten.\n\nDie Primärmissions-Karte gibt an, wie und wann Spieler Siegpunkte (SP) erzielen. Spieler können auch SP erhalten, indem sie Sekundärmissionen und Herausforderungen erfüllen, die später beschrieben werden. Auf einigen Primärmissions-Karten befinden sich auch zusätzliche Regeln, die für den Kampf gelten.\n\nDie Missionsregel-Karte nennt alle Sonderregeln, die für die Dauer des Kampfes gelten. Spieler sollten sich damit vertraut machen, bevor es weitergeht."
   },
   {
     "id": "setup-rule-place-objective-markers",
@@ -21,7 +21,7 @@
   },
   {
     "id": "setup-rule-determine-attacker-and-defender",
-    "body": "Die Spieler konsultieren die für die Mission gezogene Einsatzkarte und legen fest, welche Schlachtfeldseite die des Angreifers und welche die des Verteidigers ist. Die Spieler würfeln und der Gewinner entscheidet, wer der Angreifer und wer der Verteidiger ist. Dies bestimmt, welcher Spieler welches Einsatzgebiet im kommenden Kampf nutzt.\n\nDie Spieler nehmen ihr jeweiliges Sekundärmissions- und Gambit-Deck, mischen sie und legen sie für später zur Seite."
+    "body": "Die Spieler konsultieren die für die Mission gezogene Einsatzkarte und legen fest, welche Schlachtfeldseite die des Angreifers und welche die des Verteidigers ist. Die Spieler würfeln und der Gewinner entscheidet, wer der Angreifer und wer der Verteidiger ist. Dies bestimmt, welcher Spieler welches Einsatzgebiet im kommenden Kampf nutzt.\n\nDie Spieler nehmen ihr jeweiliges Sekundärmissions- und Herausforderungs-Deck, mischen sie und legen sie für später zur Seite."
   },
   {
     "id": "setup-rule-select-secondary-missions",
